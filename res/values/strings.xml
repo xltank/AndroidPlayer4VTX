@@ -3,7 +3,12 @@
 
     <string name="app_name">Test App</string>
     <string name="action_settings">Settings</string>
-	<string name="text_input">This is a EditText component. </string>
-	<string name="submit_Button">Get Video</string>
-	<string name="hello">Hello !</string>
+    <string name="text_input">This is a EditText component. </string>
+    <string name="submit_Button">Get Video</string>
+    <string name="send_Button">Send</string>
+    <string name="hello">Hello !</string>
+    <string name="title_activity_display_message">Message From . . .</string>
+    <string name="hello_world">Hello world!</string>
+    
+
 </resources>

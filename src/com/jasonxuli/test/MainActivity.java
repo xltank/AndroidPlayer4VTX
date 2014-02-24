@@ -1,10 +1,11 @@
 package com.jasonxuli.test;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jasonxuli.test.comps.URLLoader;
@@ -22,21 +23,34 @@ public class MainActivity extends Activity {
         
         urlLoader = new URLLoader();
         
-        Button submitBtn = (Button) findViewById(R.id.submitButton);
-        submitBtn.setOnClickListener( new View.OnClickListener() {
-			public void onClick(View v)
-			{
-				try {
-					TextView result = (TextView) findViewById(R.id.result);
-					String data = urlLoader.load(testURL);
-					Thread.sleep(2000);
-					result.setText(data);
-					System.out.println("done");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+//        Button submitBtn = (Button) findViewById(R.id.submitButton);
+//        submitBtn.setOnClickListener( new View.OnClickListener() {
+//			});
+        
+        
+    }
+    
+    public void onSubmitClick(View v)
+	{
+		try {
+			TextView result = (TextView) findViewById(R.id.result);
+			String data = urlLoader.load(testURL);
+			Thread.sleep(2000);
+			result.setText(data);
+			System.out.println("done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+    
+    public final static String EXTRA_MESSAGE = "com.jasonxuli.test.MESSAGE";
+    public void onSendClick(View v)
+    {
+    	Intent intent = new Intent(this, DisplayMessageActivity.class);
+    	EditText text = (EditText) findViewById(R.id.userName);
+    	String msg = text.getText().toString();
+    	intent.putExtra(EXTRA_MESSAGE, msg);
+    	startActivity(intent);
     }
 
 
