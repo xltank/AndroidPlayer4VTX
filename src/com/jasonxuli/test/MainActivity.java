@@ -8,40 +8,47 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.jasonxuli.test.comps.URLLoader;
+import com.jasonxuli.test.comps.APILoader;
 
 public class MainActivity extends Activity {
 
-	protected URLLoader urlLoader ;
+//	protected URLLoader urlLoader ;
+	protected APILoader apiLoader;
 	
 	protected String testURL = "http://api.staging.video-tx.com/public/video?videoId=117636516590649345&publisherId=94986174405279744&format=json&types=flv";
+	
+	private TextView resultText;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        urlLoader = new URLLoader();
+//        urlLoader = new URLLoader();
         
 //        Button submitBtn = (Button) findViewById(R.id.submitButton);
 //        submitBtn.setOnClickListener( new View.OnClickListener() {
 //			});
         
-        
     }
     
     public void onSubmitClick(View v)
 	{
+    	apiLoader = new APILoader(this);
 		try {
-			TextView result = (TextView) findViewById(R.id.result);
-			String data = urlLoader.load(testURL);
-			Thread.sleep(2000);
-			result.setText(data);
-			System.out.println("done");
+			resultText = (TextView) findViewById(R.id.result);
+//			String data = urlLoader.load(testURL);
+			String data = apiLoader.execute(testURL).get();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+    
+    public void showAPIResult(String result)
+    {
+    	resultText.setText(result);
+    }
+    
     
     public final static String EXTRA_MESSAGE = "com.jasonxuli.test.MESSAGE";
     public void onSendClick(View v)
