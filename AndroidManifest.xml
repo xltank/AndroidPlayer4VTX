@@ -27,7 +27,7 @@
         </activity>
         
         <activity
-            android:name="com.jasonxuli.test.DisplayMessageActivity"
+            android:name="com.jasonxuli.test.ViewVideoActivity"
             android:label="@string/title_activity_display_message"
             android:parentActivityName="com.jasonxuli.test.MainActivity" >
             <meta-data

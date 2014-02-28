@@ -6,13 +6,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.jasonxuli.test.MainActivity;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import android.os.AsyncTask;
-import android.view.View;
+
+import com.jasonxuli.test.MainActivity;
 
 public class APILoader extends AsyncTask<String, Integer, String> {
 
+	
+	public static String videoXML = "http://api.staging.video-tx.com/public/video?videoId=117636516590649345&publisherId=94986174405279744&format=xml&types=flv";
+	public static String videoJSON = "http://api.staging.video-tx.com/public/video?videoId=117636516590649345&publisherId=94986174405279744&format=json&types=flv";
+	
 	
 	private MainActivity _activity ;
 	
@@ -41,8 +47,6 @@ public class APILoader extends AsyncTask<String, Integer, String> {
 		    }
 		    return response;
 
-//		    JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
-//		    ((EditText) findViewById(R.id.result)).setText(response);
 		    
 		} catch (Exception e) {
 			e.printStackTrace();

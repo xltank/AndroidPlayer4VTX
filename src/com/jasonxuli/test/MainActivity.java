@@ -15,9 +15,8 @@ public class MainActivity extends Activity {
 //	protected URLLoader urlLoader ;
 	protected APILoader apiLoader;
 	
-	protected String testURL = "http://api.staging.video-tx.com/public/video?videoId=117636516590649345&publisherId=94986174405279744&format=json&types=flv";
 	
-	private TextView resultText;
+//	private TextView resultText;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +35,8 @@ public class MainActivity extends Activity {
 	{
     	apiLoader = new APILoader(this);
 		try {
-			resultText = (TextView) findViewById(R.id.result);
-//			String data = urlLoader.load(testURL);
-			String data = apiLoader.execute(testURL).get();
+//			resultText = (TextView) findViewById(R.id.result);
+			String data = apiLoader.execute(APILoader.videoXML).get();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -46,14 +44,34 @@ public class MainActivity extends Activity {
     
     public void showAPIResult(String result)
     {
-    	resultText.setText(result);
+    	
+    	
+//		Gson gson = new Gson();
+//		Object obj = gson.fromJson(result, Object.class);
+//		System.out.println(obj);
+    		
+    		
+//    	JSONObject object;
+//    	try {
+//			object = (JSONObject) new JSONTokener(result).nextValue();
+//			String resultStr = "";
+//			Iterator<String> keys = object.keys();
+//			while(keys.hasNext())
+//			{
+//				String key = keys.next();
+//				resultStr += key + " : " + object.getString(key);
+//			}
+//			resultText.setText(resultStr);
+//    	} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
     }
     
     
     public final static String EXTRA_MESSAGE = "com.jasonxuli.test.MESSAGE";
     public void onSendClick(View v)
     {
-    	Intent intent = new Intent(this, DisplayMessageActivity.class);
+    	Intent intent = new Intent(this, ViewVideoActivity.class);
     	EditText text = (EditText) findViewById(R.id.userName);
     	String msg = text.getText().toString();
     	intent.putExtra(EXTRA_MESSAGE, msg);

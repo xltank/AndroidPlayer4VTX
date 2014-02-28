@@ -1,29 +1,36 @@
 package com.jasonxuli.test;
 
+import java.net.URI;
+import java.net.URL;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
-public class DisplayMessageActivity extends Activity {
+public class ViewVideoActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_display_message);
-		// Show the Up button in the action bar.
+		setContentView(R.layout.activity_view_video);
 		setupActionBar();
 		
 		Intent intent = getIntent();
 		String msg = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 		
-		TextView messageText = (TextView) findViewById(R.id.message);
-		messageText.setText(msg);
+		VideoView player = (VideoView) findViewById(R.id.player);
+		player.setMediaController(new MediaController(this));
+		player.setVideoURI(Uri.parse("http://cdn-cc-ali-110.video-tx.com/rendition/201307/94986174405279744/94986174405280000/79/117636516590649345/117637151708939265/r117637151708939265-315k-432x324.mp4"));
+		player.start();
+		player.requestFocus();
 	}
 
 	/**
