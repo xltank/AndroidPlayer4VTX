@@ -28,7 +28,7 @@ public class ViewVideoActivity extends Activity {
 		
 		VideoView player = (VideoView) findViewById(R.id.player);
 		player.setMediaController(new MediaController(this));
-		player.setVideoURI(Uri.parse("http://cdn-cc-ali-110.video-tx.com/rendition/201307/94986174405279744/94986174405280000/79/117636516590649345/117637151708939265/r117637151708939265-315k-432x324.mp4"));
+		player.setVideoURI(Uri.parse("http://cdn-cc-mywtv-060.video.mywtv.cn/live/81701169738547200_133629312917045250_500k_live/m3u8/rendition.m3u8"));
 		player.start();
 		player.requestFocus();
 	}

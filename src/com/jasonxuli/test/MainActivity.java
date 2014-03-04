@@ -1,14 +1,19 @@
 package com.jasonxuli.test;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.jasonxuli.test.comps.APILoader;
+import com.jasonxuli.test.vo.VideoInfo;
 
 public class MainActivity extends Activity {
 
@@ -36,7 +41,7 @@ public class MainActivity extends Activity {
     	apiLoader = new APILoader(this);
 		try {
 //			resultText = (TextView) findViewById(R.id.result);
-			String data = apiLoader.execute(APILoader.videoXML).get();
+			apiLoader.execute(APILoader.videoJSON).get();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -44,27 +49,8 @@ public class MainActivity extends Activity {
     
     public void showAPIResult(String result)
     {
-    	
-    	
-//		Gson gson = new Gson();
-//		Object obj = gson.fromJson(result, Object.class);
-//		System.out.println(obj);
     		
-    		
-//    	JSONObject object;
-//    	try {
-//			object = (JSONObject) new JSONTokener(result).nextValue();
-//			String resultStr = "";
-//			Iterator<String> keys = object.keys();
-//			while(keys.hasNext())
-//			{
-//				String key = keys.next();
-//				resultStr += key + " : " + object.getString(key);
-//			}
-//			resultText.setText(resultStr);
-//    	} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
+    	
     }
     
     
