@@ -12,53 +12,17 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello" >
+        android:text="@string/main_title" >
     </TextView>
 
-    <EditText
-        android:id="@+id/userName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:inputType="textPersonName" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/userName"
-        android:ems="10"
-        android:inputType="textPassword" />
-
-    <TextView
-        android:id="@+id/result"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:layout_below="@+id/password"
-        android:ems="10"
-        android:text="123123123" />
-
-    
     <Button
-        android:id="@+id/submitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/sendButton"
-        android:layout_alignBottom="@+id/sendButton"
-        android:layout_alignParentLeft="true"
-        android:onClick="onSubmitClick"
-        android:text="@string/submit_Button" />
-    
-    <Button
-        android:id="@+id/sendButton"
+        android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/result"
-        android:onClick="onSendClick"
-        android:text="@string/send_Button" />
+        android:layout_alignRight="@+id/title"
+        android:layout_marginBottom="17dp"
+        android:text="@string/main_view_video" 
+        android:onClick="onSubmitClick"/>
 
-    
 </RelativeLayout>

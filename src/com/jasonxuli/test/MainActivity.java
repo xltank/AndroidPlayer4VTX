@@ -1,66 +1,65 @@
 package com.jasonxuli.test;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.View;
-import android.widget.EditText;
 
 import com.jasonxuli.test.comps.APILoader;
+import com.jasonxuli.test.constants.APIConstant;
+import com.jasonxuli.test.constants.MessageConstant;
+import com.jasonxuli.test.utils.VideoUtil;
 import com.jasonxuli.test.vo.VideoInfo;
 
 public class MainActivity extends Activity {
 
-//	protected URLLoader urlLoader ;
 	protected APILoader apiLoader;
 	
+	protected VideoInfo curVideoInfo = null; 
 	
-//	private TextView resultText;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-//        urlLoader = new URLLoader();
-        
-//        Button submitBtn = (Button) findViewById(R.id.submitButton);
-//        submitBtn.setOnClickListener( new View.OnClickListener() {
-//			});
-        
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        startActivity(loginIntent);
     }
     
     public void onSubmitClick(View v)
 	{
-    	apiLoader = new APILoader(this);
+    	apiLoader = new APILoader(onVideoInfoHandler, APIConstant.VIDEOINFO, APILoader.GET, null);
 		try {
-//			resultText = (TextView) findViewById(R.id.result);
-			apiLoader.execute(APILoader.videoJSON).get();
+			apiLoader.execute().get();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
     
-    public void showAPIResult(String result)
-    {
-    		
+    final Handler onVideoInfoHandler = new Handler(){
     	
-    }
+    	@Override
+    	public void handleMessage(Message msg){
+    		super.handleMessage(msg);
+    		
+    		String result = msg.getData().getString("result");
+    		curVideoInfo = VideoUtil.parseVideoInfoJSON(result);
+    		
+    		viewVideo();
+    	}
+    	
+    };
     
     
-    public final static String EXTRA_MESSAGE = "com.jasonxuli.test.MESSAGE";
-    public void onSendClick(View v)
+    public void viewVideo()
     {
     	Intent intent = new Intent(this, ViewVideoActivity.class);
-    	EditText text = (EditText) findViewById(R.id.userName);
-    	String msg = text.getText().toString();
-    	intent.putExtra(EXTRA_MESSAGE, msg);
+    	String videoUrl = curVideoInfo.renditions.get(0).getUrl();
+    	intent.putExtra(MessageConstant.VIDEO_URL, videoUrl);
     	startActivity(intent);
     }
 

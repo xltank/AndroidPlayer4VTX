@@ -8,15 +8,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ViewVideoActivity" >
 
-<!--     <TextView -->
-<!--         android:id="@+id/message" -->
-<!--         android:layout_width="wrap_content" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_alignParentLeft="true" -->
-<!--         android:layout_alignParentTop="true" -->
-<!--         android:layout_marginLeft="50dp" -->
-<!--         android:layout_marginTop="64dp" -->
-<!--         android:text="@string/hello_world" /> -->
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="64dp"
+        android:text="@string/view_video_title" />
 
     <VideoView
         android:id="@+id/player"

@@ -1,5 +1,8 @@
 package com.jasonxuli.test.vo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Rendition {
 
 	public String id = "";
@@ -127,6 +130,30 @@ public class Rendition {
 		setDuration(duration);
 		setWidth(width);
 		setHeight(height);
+	}
+	
+	public Rendition(JSONObject json){
+		
+		try {
+			setId(json.getString("renditionId"));
+			setType(json.getString("type"));
+			setUrl(json.getString("url"));
+			setSegments(json.getString("segments"));
+			setFileSize(json.getLong("fileSize"));
+			setBitRate(json.getInt("bitRate"));
+			setDuration(json.getLong("duration"));
+			setWidth(json.getInt("width"));
+			setHeight(json.getInt("height"));
+			
+			JSONObject attributes = json.getJSONObject("attributes");
+			setRaw(attributes.getString("vtx:raw"));
+			setName(attributes.getString("vtx:name"));
+			
+		} 
+		catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	 

@@ -18,18 +18,32 @@
         
         <activity
             android:name="com.jasonxuli.test.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/main_title" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.jasonxuli.test.LoginActivity"
+            android:label="@string/login_title" 
+            android:parentActivityName="com.jasonxuli.test.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
         <activity
             android:name="com.jasonxuli.test.ViewVideoActivity"
-            android:label="@string/title_activity_display_message"
+            android:label="@string/view_video_title"
             android:parentActivityName="com.jasonxuli.test.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/mp4"/>
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jasonxuli.test.MainActivity" />

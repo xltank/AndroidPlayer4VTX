@@ -1,44 +1,66 @@
 package com.jasonxuli.test.comps;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.params.BasicHttpParams;
 
 import android.os.AsyncTask;
-
-import com.jasonxuli.test.MainActivity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
 public class APILoader extends AsyncTask<String, Integer, String> {
 
+	public static final String GET = "GET";
+	public static final String POST = "POST";
 	
-	public static String videoXML = "http://api.staging.video-tx.com/public/video?videoId=117636516590649345&publisherId=94986174405279744&format=xml&types=flv";
-	public static String videoJSON = "http://api.staging.video-tx.com/public/video?videoId=117636516590649345&publisherId=94986174405279744&format=json&types=flv";
+	private Handler _handler ;
+	private String _url ;
+	private String _method ;
+	private List<BasicHttpParams> _params ;
 	
 	
-	private MainActivity _activity ;
-	
-	public APILoader(MainActivity activity)
+	public APILoader(Handler handler, String url, String method, List<BasicHttpParams> params)
 	{
-		_activity = activity;
+		_handler = handler;
+		_url = url;
+		_method = method;
+		_params = params;
 	}
+	
 	
 	protected String doInBackground(String... urls)
 	{
-		String apiUrl = urls[0];
 		HttpURLConnection conn = null;
 		InputStream in = null;
 		String response = "";
 		
 		try {
-			URL url = new URL(apiUrl);
+			URL url = new URL(_url);
 		    conn = (HttpURLConnection) url.openConnection();
-		    conn.setRequestMethod("GET");
+		    conn.setRequestMethod(_method);
+		    
+		    if(_method.equals(GET)){
+		    	
+		    }else if(_method.equals(POST)){
+		    	conn.setDoInput(true);
+		    	conn.setDoOutput(true);
+		    	conn.setUseCaches(false);
+		    }
+		    
 		    conn.connect();
+		    
+		    _params.
+		    DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+		    out.writeBytes(str)
+		    
 		    in = conn.getInputStream();
 		    BufferedReader bReader = new BufferedReader(new InputStreamReader(in));
 		    String temp = "";
@@ -65,10 +87,14 @@ public class APILoader extends AsyncTask<String, Integer, String> {
 		return "";
 	}
 	
-	
+	@Override
 	protected void onPostExecute(String result)
 	{
-		_activity.showAPIResult(result);
+		Bundle bundle = new Bundle();
+		bundle.putString("result", result);
+		Message msg = new Message();
+		msg.setData(bundle);
+		_handler.handleMessage(msg);
 	}
 	
 }

@@ -1,37 +1,62 @@
 package com.jasonxuli.test;
 
+import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.params.BasicHttpParams;
+
+import com.jasonxuli.test.comps.APILoader;
+import com.jasonxuli.test.constants.APIConstant;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.MediaController;
-import android.widget.VideoView;
+import android.view.View;
+import android.widget.EditText;
 
-import com.jasonxuli.test.constants.MessageConstant;
-
-public class ViewVideoActivity extends Activity {
-
+public class LoginActivity extends Activity {
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_view_video);
+		setContentView(R.layout.activity_login);
 		setupActionBar();
 		
-		Intent intent = getIntent();
-		String videoUrl = intent.getStringExtra(MessageConstant.VIDEO_URL);
-		
-		VideoView player = (VideoView) findViewById(R.id.player);
-		player.setMediaController(new MediaController(this));
-		player.setVideoURI(Uri.parse(videoUrl));
-		player.start();
-		player.requestFocus();
 	}
+	
+	protected APILoader apiLoader;
 
+    public void onLoginClick(View v)
+	{
+    	String email = ((EditText) findViewById(R.id.userName)).getText().toString();
+    	String pwd = ((EditText) findViewById(R.id.password)).getText().toString();
+    	
+    	BasicHttpParams params = new BasicHttpParams();
+    	params.setParameter("email",email );
+    	params.setParameter("passwd", pwd);
+    	apiLoader = new APILoader(loginHandler, APIConstant.LOGIN, APILoader.POST, null);
+		try {
+			apiLoader.execute().get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+    
+    
+    final Handler loginHandler = new Handler(){
+    	
+    	@Override
+    	public void handleMessage(Message msg) {
+    		super.handleMessage(msg);
+    		String result = msg.getData().getString("result");
+    	}
+    };
+	
+	
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
 	 */
