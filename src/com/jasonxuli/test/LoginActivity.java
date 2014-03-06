@@ -1,25 +1,12 @@
 package com.jasonxuli.test;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.params.BasicHttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.jasonxuli.test.comps.APILoader;
-import com.jasonxuli.test.comps.HttpParamsVTX;
-import com.jasonxuli.test.constants.APIConstant;
-import com.jasonxuli.test.utils.GlobalData;
-import com.jasonxuli.test.vo.Manager;
-import com.jasonxuli.test.vo.Publisher;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +16,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import com.jasonxuli.test.comps.APILoader;
+import com.jasonxuli.test.comps.HttpParamsVTX;
+import com.jasonxuli.test.constants.APIConstant;
+import com.jasonxuli.test.utils.GlobalData;
+import com.jasonxuli.test.vo.Manager;
+import com.jasonxuli.test.vo.Publisher;
 
 public class LoginActivity extends Activity {
 	
@@ -71,10 +65,10 @@ public class LoginActivity extends Activity {
 				json = (JSONObject) new JSONTokener(result).nextValue();
 				
 				String status = json.getString("status");
-				String message = json.getString("message");
+//				String message = json.getString("message");
 				
 				if(!status.equals("SUCCESS")){
-					// TODO: popup message .
+					// TODO: pop up message .
 					return ;
 				}else
 				{
