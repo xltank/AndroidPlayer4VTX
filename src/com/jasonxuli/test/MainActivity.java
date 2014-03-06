@@ -9,8 +9,10 @@ import android.view.Menu;
 import android.view.View;
 
 import com.jasonxuli.test.comps.APILoader;
+import com.jasonxuli.test.comps.HttpParamsVTX;
 import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.constants.MessageConstant;
+import com.jasonxuli.test.utils.GlobalData;
 import com.jasonxuli.test.utils.VideoUtil;
 import com.jasonxuli.test.vo.VideoInfo;
 
@@ -26,13 +28,21 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        Intent loginIntent = new Intent(this, LoginActivity.class);
-        startActivity(loginIntent);
+        System.out.println("Main Activity");
+        if(GlobalData.token == null)
+        {
+        	Intent loginIntent = new Intent(this, LoginActivity.class);
+        	startActivity(loginIntent);
+        }
     }
     
     public void onSubmitClick(View v)
 	{
-    	apiLoader = new APILoader(onVideoInfoHandler, APIConstant.VIDEOINFO, APILoader.GET, null);
+    	String params = new HttpParamsVTX("videoId", APIConstant.DEFAULT_VIDEO_ID, 
+						    			  "publisherId", APIConstant.DEFAULT_PUBLISHER_ID, 
+						    			  "format", APIConstant.DEFAULT_RESULT_FORMAT, 
+						    			  "types", APIConstant.DEFAULT_VIDEO_TYPES).toString();
+    	apiLoader = new APILoader(onVideoInfoHandler, APIConstant.VIDEOINFO, APILoader.GET, params);
 		try {
 			apiLoader.execute().get();
 		} catch (Exception e) {

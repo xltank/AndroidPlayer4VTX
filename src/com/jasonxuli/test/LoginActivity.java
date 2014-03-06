@@ -1,13 +1,25 @@
 package com.jasonxuli.test;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.params.BasicHttpParams;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import com.jasonxuli.test.comps.APILoader;
+import com.jasonxuli.test.comps.HttpParamsVTX;
 import com.jasonxuli.test.constants.APIConstant;
+import com.jasonxuli.test.utils.GlobalData;
+import com.jasonxuli.test.vo.Manager;
+import com.jasonxuli.test.vo.Publisher;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,11 +47,10 @@ public class LoginActivity extends Activity {
     	String email = ((EditText) findViewById(R.id.userName)).getText().toString();
     	String pwd = ((EditText) findViewById(R.id.password)).getText().toString();
     	
-    	BasicHttpParams params = new BasicHttpParams();
-    	params.setParameter("email",email );
-    	params.setParameter("passwd", pwd);
-    	apiLoader = new APILoader(loginHandler, APIConstant.LOGIN, APILoader.POST, null);
+    	String params = new HttpParamsVTX("email", email, "passwd", pwd).toString();
+    	
 		try {
+			apiLoader = new APILoader(loginHandler, APIConstant.LOGIN, APILoader.POST, params);
 			apiLoader.execute().get();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -53,8 +64,37 @@ public class LoginActivity extends Activity {
     	public void handleMessage(Message msg) {
     		super.handleMessage(msg);
     		String result = msg.getData().getString("result");
+    		System.out.println(result);
+
+    		JSONObject json = null;
+			try {
+				json = (JSONObject) new JSONTokener(result).nextValue();
+				
+				String status = json.getString("status");
+				String message = json.getString("message");
+				
+				if(!status.equals("SUCCESS")){
+					// TODO: popup message .
+					return ;
+				}else
+				{
+					GlobalData.token = json.getString("token");
+					GlobalData.curPublisher = new Publisher(json.getJSONObject("publisher"));
+					GlobalData.curManager = new Manager(json.getJSONObject("manager"));
+					
+					toMainPage();
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
     	}
     };
+    
+    private void toMainPage(){
+    	Intent intent = new Intent(this, MainActivity.class);
+    	startActivity(intent);
+    }
 	
 	
 	/**
