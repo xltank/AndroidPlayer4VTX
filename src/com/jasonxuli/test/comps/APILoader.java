@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.jasonxuli.test.utils.GlobalData;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -100,7 +102,7 @@ public class APILoader extends AsyncTask<String, Integer, String> {
 			URL url = new URL(_url);
 		    conn = (HttpURLConnection) url.openConnection();
 		    conn.setRequestMethod(_method);
-		    
+		    conn.setRequestProperty("Authorization", GlobalData.token);
 	    	conn.setDoInput(true);
 	    	conn.setDoOutput(true);
 	    	conn.setUseCaches(false);

@@ -17,7 +17,7 @@
     <string name="login_title">Login Panel</string>
     <string name="login_user_name">UserName</string>
     <string name="login_password">Password</string>
-    <string name="login_login">Get Video</string>
+    <string name="login_login">Login</string>
     <string name="login_default_email">sifang@163.com</string>
     <string name="login_default_password">111111</string>
     

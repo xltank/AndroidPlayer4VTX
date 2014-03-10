@@ -7,8 +7,9 @@ public class APIConstant {
 	public static String DEFAULT_RESULT_FORMAT = "json";
 	public static String DEFAULT_VIDEO_TYPES = "mp4";
 	
-	public static String VIDEOINFO = "http://api.staging.video-tx.com/public/video";
+	public static String VIDEO_INFO = "public/video";
 
 	
-	public static String LOGIN = "http://api.staging.video-tx.com/login";
+	public static String LOGIN = "login";
+	public static String GET_RECENT_VIDEOS = "getRecentVideos";
 }

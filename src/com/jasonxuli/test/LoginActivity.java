@@ -17,9 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.jasonxuli.test.comps.APILoader;
-import com.jasonxuli.test.comps.HttpParamsVTX;
-import com.jasonxuli.test.constants.APIConstant;
+import com.jasonxuli.test.comps.Facade;
 import com.jasonxuli.test.utils.GlobalData;
 import com.jasonxuli.test.vo.Manager;
 import com.jasonxuli.test.vo.Publisher;
@@ -31,29 +29,20 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		setupActionBar();
-		
 	}
 	
-	protected APILoader apiLoader;
 
     public void onLoginClick(View v)
 	{
     	String email = ((EditText) findViewById(R.id.userName)).getText().toString();
     	String pwd = ((EditText) findViewById(R.id.password)).getText().toString();
     	
-    	String params = new HttpParamsVTX("email", email, "passwd", pwd).toString();
-    	
-		try {
-			apiLoader = new APILoader(loginHandler, APIConstant.LOGIN, APILoader.POST, params);
-			apiLoader.execute().get();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	Facade.ins().login(loginHandler, email, pwd);
 	}
     
     
-    final Handler loginHandler = new Handler(){
-    	
+    final Handler loginHandler = new Handler()
+    {
     	@Override
     	public void handleMessage(Message msg) {
     		super.handleMessage(msg);
@@ -65,7 +54,6 @@ public class LoginActivity extends Activity {
 				json = (JSONObject) new JSONTokener(result).nextValue();
 				
 				String status = json.getString("status");
-//				String message = json.getString("message");
 				
 				if(!status.equals("SUCCESS")){
 					// TODO: pop up message .

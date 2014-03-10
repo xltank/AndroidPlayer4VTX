@@ -5,6 +5,7 @@ import com.jasonxuli.test.vo.Publisher;
 
 public class GlobalData {
 
+	public static String apiDomain = "http://api.staging.video-tx.com/";
 	
 	public static String token = "";
 	

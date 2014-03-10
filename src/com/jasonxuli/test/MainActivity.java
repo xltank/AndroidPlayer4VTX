@@ -1,5 +1,9 @@
 package com.jasonxuli.test;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +13,7 @@ import android.view.Menu;
 import android.view.View;
 
 import com.jasonxuli.test.comps.APILoader;
+import com.jasonxuli.test.comps.Facade;
 import com.jasonxuli.test.comps.HttpParamsVTX;
 import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.constants.MessageConstant;
@@ -33,21 +38,34 @@ public class MainActivity extends Activity {
         {
         	Intent loginIntent = new Intent(this, LoginActivity.class);
         	startActivity(loginIntent);
+        }else
+        {
+        	Facade.ins().getRecentVideos(onGetRecentVideosHandler, "10", "1");
         }
     }
     
-    public void onSubmitClick(View v)
+    
+    final Handler onGetRecentVideosHandler = new Handler()
+    {
+    	@Override
+    	public void handleMessage(Message msg)
+    	{
+    		super.handleMessage(msg);
+    		
+    		String result = msg.getData().getString("result");
+    		System.out.println(result);
+    		JSONArray videos = (JSONArray) new JSONTokener().nextValue();
+    	}
+    };
+    
+    
+    public void onVideoItemClick(View v)
 	{
-    	String params = new HttpParamsVTX("videoId", APIConstant.DEFAULT_VIDEO_ID, 
-						    			  "publisherId", APIConstant.DEFAULT_PUBLISHER_ID, 
-						    			  "format", APIConstant.DEFAULT_RESULT_FORMAT, 
-						    			  "types", APIConstant.DEFAULT_VIDEO_TYPES).toString();
-    	apiLoader = new APILoader(onVideoInfoHandler, APIConstant.VIDEOINFO, APILoader.GET, params);
-		try {
-			apiLoader.execute().get();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	Facade.ins().getVideoInfo(  onVideoInfoHandler, 
+					    			APIConstant.DEFAULT_VIDEO_ID, 
+					    			APIConstant.DEFAULT_PUBLISHER_ID, 
+					    			APIConstant.DEFAULT_RESULT_FORMAT, 
+					    			APIConstant.DEFAULT_VIDEO_TYPES);
 	}
     
     final Handler onVideoInfoHandler = new Handler(){
