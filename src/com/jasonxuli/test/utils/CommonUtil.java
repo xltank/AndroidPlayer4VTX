@@ -10,6 +10,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 public class CommonUtil {
 
 	
@@ -30,5 +34,16 @@ public class CommonUtil {
 			e.printStackTrace();
 		}
 		return null ;
+	}
+	
+	
+	public static Boolean isWIFI(Context context)
+	{
+		ConnectivityManager conn = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo info = conn.getActiveNetworkInfo();
+		if(info != null && info.getType() == ConnectivityManager.TYPE_WIFI)
+			return true ;
+		
+		return false;
 	}
 }

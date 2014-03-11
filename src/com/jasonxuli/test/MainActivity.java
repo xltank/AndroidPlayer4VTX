@@ -9,22 +9,29 @@ import org.json.JSONTokener;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 
 import com.jasonxuli.test.comps.APILoader;
 import com.jasonxuli.test.comps.Facade;
 import com.jasonxuli.test.comps.HttpParamsVTX;
 import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.constants.MessageConstant;
+import com.jasonxuli.test.utils.CommonUtil;
 import com.jasonxuli.test.utils.GlobalData;
 import com.jasonxuli.test.utils.VideoUtil;
 import com.jasonxuli.test.vo.Video;
@@ -91,12 +98,17 @@ public class MainActivity extends Activity {
     {
     	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     	{
-    		Video video = (Video) parent.getItemAtPosition(position);
-    		Facade.ins().getVideoInfo(  onVideoInfoHandler, 
-    				video.getId(), 
-    				video.getPublisherId(), 
-	    			APIConstant.DEFAULT_RESULT_FORMAT, 
-	    			APIConstant.DEFAULT_VIDEO_TYPES);
+    		if(true)//!CommonUtil.isWIFI(MainActivity.this))
+    		{
+    			showPopup();
+    		}
+    		
+//    		Video video = (Video) parent.getItemAtPosition(position);
+//    		Facade.ins().getVideoInfo(  onVideoInfoHandler, 
+//    				video.getId(), 
+//    				video.getPublisherId(), 
+//	    			APIConstant.DEFAULT_RESULT_FORMAT, 
+//	    			APIConstant.DEFAULT_VIDEO_TYPES);
     	}
 	};
     
@@ -123,6 +135,25 @@ public class MainActivity extends Activity {
     	startActivity(intent);
     }
 
+    
+    public void showPopup()
+    {
+    	View popupView = getLayoutInflater().inflate(R.layout.popup_common, null);
+		final PopupWindow popup = new PopupWindow(popupView);
+		popup.setOutsideTouchable(true);
+		popup.setFocusable(true);
+		popup.setBackgroundDrawable(new BitmapDrawable());
+		Button btn = (Button) popupView.findViewById(R.id.popup_common_ok);
+		btn.setOnClickListener(new OnClickListener() 
+		{
+			@Override
+			public void onClick(View v) {
+				popup.dismiss();
+			}
+		});
+		popup.showAtLocation(findViewById(R.id.activity_main), Gravity.TOP, 30, 100);
+    }
+    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) 
