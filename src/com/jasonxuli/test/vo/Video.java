@@ -64,6 +64,12 @@ public class Video{
 		
 	}
 	
+	@Override
+	public String toString()
+	{
+		return this.title;
+	}
+	
 	
     public static enum VideoStatus {
 

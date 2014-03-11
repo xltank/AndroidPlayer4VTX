@@ -1,7 +1,10 @@
 package com.jasonxuli.test.utils;
 
+import java.util.List;
+
 import com.jasonxuli.test.vo.Manager;
 import com.jasonxuli.test.vo.Publisher;
+import com.jasonxuli.test.vo.Video;
 
 public class GlobalData {
 
@@ -11,4 +14,7 @@ public class GlobalData {
 	
 	public static Publisher curPublisher = null;
 	public static Manager curManager = null;
+	
+	
+	public static List<Video> videos;
 }
