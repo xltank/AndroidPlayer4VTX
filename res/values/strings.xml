@@ -9,6 +9,10 @@
     <string name="title_activity_display_message">Message From . . .</string>
     <string name="hello_world">Hello world!</string>
 
+    <!--  -->
+    <string name="okLabel">OK</string>
+    <string name="cancelLabel">Cancel</string>
+    
     <!-- activity_main -->
     <string name="main_title">Main Panel</string>
     <string name="main_view_video">View Video</string>
@@ -24,4 +28,6 @@
     <!-- activity_view_video -->
     <string name="view_video_title">View Video Title</string>
 
+    
+    
 </resources>

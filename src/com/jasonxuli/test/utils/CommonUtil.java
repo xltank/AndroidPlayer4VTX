@@ -41,6 +41,7 @@ public class CommonUtil {
 	{
 		ConnectivityManager conn = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo info = conn.getActiveNetworkInfo();
+		System.out.println(info.getType());
 		if(info != null && info.getType() == ConnectivityManager.TYPE_WIFI)
 			return true ;
 		

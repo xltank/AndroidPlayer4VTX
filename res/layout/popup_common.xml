@@ -4,25 +4,44 @@
     android:layout_height="@dimen/popup_common_height"
     android:orientation="vertical" 
     android:background="#ACACAC"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     >
 
     <TextView
         android:id="@+id/popup_common_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Popup Title"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/popup_common_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Message Message Message Message Message Message Message Message " />
+        />
 
-    <Button
-        android:id="@+id/popup_common_ok"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OK"/>
+        android:paddingTop="20dp"
+        >
+	    
+	    <Button
+	        android:id="@+id/popup_common_ok"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        />
+	    
+	    <Button
+	        android:id="@+id/popup_common_cancel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toLeftOf="@+id/popup_common_ok"
+	        />
+    
+    </RelativeLayout>
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +31,8 @@ import android.widget.PopupWindow;
 import com.jasonxuli.test.comps.APILoader;
 import com.jasonxuli.test.comps.Facade;
 import com.jasonxuli.test.comps.HttpParamsVTX;
+import com.jasonxuli.test.comps.PopupConfirm;
+import com.jasonxuli.test.comps.PopupMessage;
 import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.constants.MessageConstant;
 import com.jasonxuli.test.utils.CommonUtil;
@@ -98,19 +102,36 @@ public class MainActivity extends Activity {
     {
     	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     	{
-    		if(true)//!CommonUtil.isWIFI(MainActivity.this))
+    		final Video video = (Video) parent.getItemAtPosition(position);
+    		if(!CommonUtil.isWIFI(MainActivity.this))
     		{
-    			showPopup();
+    			final PopupConfirm popup = new PopupConfirm(MainActivity.this, "Information", "This is a information from TestApp.");
+    			popup.setOKButton(new OnClickListener() 
+    			{
+					@Override
+					public void onClick(View v) 
+					{
+//						getVideoInfo(video);
+						popup.dismiss();
+					}
+				});
+    			popup.show();
     		}
-    		
-//    		Video video = (Video) parent.getItemAtPosition(position);
-//    		Facade.ins().getVideoInfo(  onVideoInfoHandler, 
-//    				video.getId(), 
-//    				video.getPublisherId(), 
-//	    			APIConstant.DEFAULT_RESULT_FORMAT, 
-//	    			APIConstant.DEFAULT_VIDEO_TYPES);
+    		else {
+    			getVideoInfo(video);
+    		}
     	}
 	};
+	
+	private void getVideoInfo(Video video)
+	{
+		Facade.ins().getVideoInfo(  onVideoInfoHandler, 
+				video.getId(), 
+				video.getPublisherId(), 
+    			APIConstant.DEFAULT_RESULT_FORMAT, 
+    			APIConstant.DEFAULT_VIDEO_TYPES);
+	}
+	
     
     final Handler onVideoInfoHandler = new Handler()
     {
@@ -136,23 +157,12 @@ public class MainActivity extends Activity {
     }
 
     
-    public void showPopup()
-    {
-    	View popupView = getLayoutInflater().inflate(R.layout.popup_common, null);
-		final PopupWindow popup = new PopupWindow(popupView);
-		popup.setOutsideTouchable(true);
-		popup.setFocusable(true);
-		popup.setBackgroundDrawable(new BitmapDrawable());
-		Button btn = (Button) popupView.findViewById(R.id.popup_common_ok);
-		btn.setOnClickListener(new OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) {
-				popup.dismiss();
-			}
-		});
-		popup.showAtLocation(findViewById(R.id.activity_main), Gravity.TOP, 30, 100);
-    }
+//    public void showPopup()
+//    {
+//    	PopupMessage popup = new PopupMessage(this, "Information", "This is a information from TestApp.");
+//		popup.show();
+//		System.out.println("show popup");
+//    }
     
 
     @Override
