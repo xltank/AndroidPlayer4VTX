@@ -4,35 +4,26 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 
 import com.jasonxuli.test.comps.APILoader;
 import com.jasonxuli.test.comps.Facade;
 import com.jasonxuli.test.comps.HttpParamsVTX;
+import com.jasonxuli.test.comps.HttpRequester;
 import com.jasonxuli.test.comps.PopupConfirm;
-import com.jasonxuli.test.comps.PopupMessage;
+import com.jasonxuli.test.comps.VideoListArrayAdapter;
 import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.constants.MessageConstant;
 import com.jasonxuli.test.utils.CommonUtil;
@@ -54,6 +45,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        System.out.println("activity w " + getWindow().getDecorView().getWidth()+ " -- h " + getWindow().getDecorView().getHeight());
+        
         
         // when add onClickHandler in ListView in layout xml, 
         // a Exception: error inflating class android.widget.listview
@@ -92,7 +86,7 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 			}
     		
-    		ArrayAdapter<Video> adapter = new ArrayAdapter<Video>(MainActivity.this, R.layout.textview_videolist, GlobalData.videos);
+    		VideoListArrayAdapter adapter = new VideoListArrayAdapter(MainActivity.this, R.layout.item_videolist, GlobalData.videos);
     		videoList.setAdapter(adapter);
     	}
     };
@@ -105,14 +99,15 @@ public class MainActivity extends Activity {
     		final Video video = (Video) parent.getItemAtPosition(position);
     		if(!CommonUtil.isWIFI(MainActivity.this))
     		{
-    			final PopupConfirm popup = new PopupConfirm(MainActivity.this, "Information", "This is a information from TestApp.");
+    			final PopupConfirm popup = new PopupConfirm(MainActivity.this, 
+    					getString(R.string.warning), 
+    					getString(R.string.no_wifi_message));
     			popup.setOKButton(new OnClickListener() 
     			{
 					@Override
 					public void onClick(View v) 
 					{
-//						getVideoInfo(video);
-						popup.dismiss();
+						getVideoInfo(video);
 					}
 				});
     			popup.show();

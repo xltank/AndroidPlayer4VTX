@@ -1,11 +1,14 @@
 package com.jasonxuli.test.comps;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import org.apache.http.util.ByteArrayBuffer;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,7 +18,7 @@ import android.os.Message;
 import com.jasonxuli.test.utils.GlobalData;
 
 
-public class APILoader extends AsyncTask<String, Integer, String> {
+public class HttpRequester extends AsyncTask<String, Integer, byte[]> {
 
 	public static final String GET = "GET";
 	public static final String POST = "POST";
@@ -26,7 +29,14 @@ public class APILoader extends AsyncTask<String, Integer, String> {
 	private String _params ;
 	
 	
-	public APILoader(Handler handler, String url, String method, String params)
+	/**
+	 * 
+	 * @param handler  callback
+	 * @param url  http url
+	 * @param method  GET/POST
+	 * @param params  "key1=value1&key2=value2"
+	 */
+	public HttpRequester(Handler handler, String url, String method, String params)
 	{
 		_handler = handler;
 		_url = url;
@@ -35,7 +45,7 @@ public class APILoader extends AsyncTask<String, Integer, String> {
 	}
 	
 	
-	protected String doInBackground(String... urls)
+	protected byte[] doInBackground(String... urls)
 	{
 		if(_method.equals(GET)){
 			return doGet();
@@ -43,15 +53,15 @@ public class APILoader extends AsyncTask<String, Integer, String> {
 			return doPost();
 		} 
 		
-		return "";
+		return null;
 	}
 	
 	
-	private String doGet()
+	private byte[] doGet()
 	{
 		HttpURLConnection conn = null;
 		InputStream in = null;
-		String response = "";
+		byte[] response ;
 		
 		try {
 			_url += "?" + _params;
@@ -64,13 +74,18 @@ public class APILoader extends AsyncTask<String, Integer, String> {
 	    	conn.setUseCaches(false);
 	    	
 	    	conn.connect();
-		    
-		    in = conn.getInputStream();
+		    in = new BufferedInputStream(conn.getInputStream());
+//		    int byteLen = in.available();
+//		    response = new byte[byteLen];
+//		    in.read(response);
+//		    System.out.println(response.length);
 		    BufferedReader bReader = new BufferedReader(new InputStreamReader(in));
-		    String temp = "";
-		    while ((temp = bReader.readLine()) != null) {
-		        response += temp;
+		    ByteArrayBuffer bab = new ByteArrayBuffer(0);
+		    int pos = 0;
+		    while ((pos = bReader.read()) != -1) {
+		    	bab.append((byte) pos);
 		    }
+		    response = bab.buffer();
 		    return response;
 
 		    
@@ -88,15 +103,15 @@ public class APILoader extends AsyncTask<String, Integer, String> {
 	    	}
 	    }
 		
-		return "";
+		return null;
 	}
 	
 	
-	private String doPost()
+	private byte[] doPost()
 	{
 		HttpURLConnection conn = null;
 		InputStream in = null;
-		String response = "";
+		byte[] response = null ;
 		
 		try {
 			URL url = new URL(_url);
@@ -116,11 +131,12 @@ public class APILoader extends AsyncTask<String, Integer, String> {
 		    out.close();
 		    
 		    in = conn.getInputStream();
-		    BufferedReader bReader = new BufferedReader(new InputStreamReader(in));
-		    String temp = "";
-		    while ((temp = bReader.readLine()) != null) {
-		        response += temp;
-		    }
+		    in.read(response);
+//		    BufferedReader bReader = new BufferedReader(new InputStreamReader(in));
+//		    String temp = "";
+//		    while ((temp = bReader.readLine()) != null) {
+//		        response += temp;
+//		    }
 		    return response;
 
 		    
@@ -138,15 +154,15 @@ public class APILoader extends AsyncTask<String, Integer, String> {
 	    	}
 	    }
 		
-		return "";
+		return null;
 	}
 	
 	
 	@Override
-	protected void onPostExecute(String result)
+	protected void onPostExecute(byte[] result)
 	{
 		Bundle bundle = new Bundle();
-		bundle.putString("result", result);
+		bundle.putByteArray("result", result);
 		Message msg = new Message();
 		msg.setData(bundle);
 		_handler.handleMessage(msg);

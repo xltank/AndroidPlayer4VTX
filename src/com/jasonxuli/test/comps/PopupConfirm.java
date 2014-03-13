@@ -30,6 +30,7 @@ public class PopupConfirm {
 	
 	/**
 	 * okLabel = "OK", cancelLabel = "Cancel"
+	 * default "cancelHandler" just dismisses this popup.
 	 * @param activity
 	 * @param title
 	 * @param message
@@ -77,6 +78,8 @@ public class PopupConfirm {
 		setMessage(_message);
 		setOKButton(_okLabel, null);
 		setCancelButton(_cancelLabel, null);
+		
+		((Button) _view.findViewById(R.id.popup_common_cancel)).setOnClickListener(defaultCancelListener);
 	}
 	
 	
@@ -127,5 +130,13 @@ public class PopupConfirm {
 		cancelButton.setOnClickListener(clickListener);
 	}
 	
+	
+	final OnClickListener defaultCancelListener = new OnClickListener() 
+	{
+		@Override
+		public void onClick(View v) {
+			_popup.dismiss();
+		}
+	};
 	
 }

@@ -8,6 +8,10 @@
     <string name="text_input">This is a EditText component. </string>
     <string name="title_activity_display_message">Message From . . .</string>
     <string name="hello_world">Hello world!</string>
+    
+    <string name="warning">Warning</string>
+    
+    <string name="no_wifi_message">You are in 2G/3G connection, are you sure you want to continue?</string>
 
     <!--  -->
     <string name="okLabel">OK</string>

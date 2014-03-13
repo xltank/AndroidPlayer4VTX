@@ -1,5 +1,8 @@
 package com.jasonxuli.test;
 
+import java.io.UnsupportedEncodingException;
+import java.util.concurrent.ExecutionException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -18,6 +21,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.jasonxuli.test.comps.Facade;
+import com.jasonxuli.test.comps.HttpParamsVTX;
+import com.jasonxuli.test.comps.HttpRequester;
 import com.jasonxuli.test.utils.GlobalData;
 import com.jasonxuli.test.vo.Manager;
 import com.jasonxuli.test.vo.Publisher;
@@ -29,7 +34,37 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		setupActionBar();
+		
+		test();
 	}
+	
+	private void test()
+	{
+		String params = new HttpParamsVTX("format", "mrss", "videoId", "137687869375381505", "publisherId", "94986174405279744").toString();
+    	HttpRequester requester = new HttpRequester(testHandler, 
+    			"http://api.staging.video-tx.com/public/video",
+    			//http://my.staging.video-tx.com/static/images/logo/logo.png,
+    			HttpRequester.GET, 
+    			params);
+		requester.execute();
+	}
+	final Handler testHandler = new Handler()
+	{
+		@Override
+    	public void handleMessage(Message msg) 
+		{
+			super.handleMessage(msg);
+			try {
+				String str = new String(msg.getData().getByteArray("result"), "UTF-8");
+				System.out.println(str);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	};
+	
+	
 	
 
     public void onLoginClick(View v)

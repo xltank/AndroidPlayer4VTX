@@ -7,4 +7,8 @@
     <dimen name="popup_common_width">100dp</dimen>
     <dimen name="popup_common_height">100dp</dimen>
     
+    <dimen name="videolist_item_height">100dp</dimen>
+    <dimen name="videolist_item_image_width">120dp</dimen>
+    <dimen name="videolist_item_image_height">90dp</dimen>
+    
 </resources>

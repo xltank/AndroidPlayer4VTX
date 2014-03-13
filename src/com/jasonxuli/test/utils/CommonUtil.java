@@ -47,4 +47,37 @@ public class CommonUtil {
 		
 		return false;
 	}
+	
+	
+	/**
+	 * 
+	 * @param duration in milliseconds
+	 * @return "HH:MM:SS"
+	 */
+	public static String formatDuration(long duration)
+	{
+//		int mil = (int) duration%1000 ;
+		
+		int seconds = (int) duration/1000;
+		
+		int hour = seconds/3600;
+		String hourStr = fillWith(hour+"", "0", 2);
+		
+		int minute = (seconds%3600)/60;
+		String minuteStr = fillWith(minute+"", "0", 2);
+		
+		int second = seconds%60;
+		String secondStr = fillWith(second+"", "0", 2);
+		
+		return hourStr+":"+minuteStr+":"+secondStr;
+	}
+	
+	
+	public static String fillWith(String source, String filler, int num)
+	{
+		while(source.length() < num)
+			source = filler + source;
+		
+		return source ;
+	}
 }
