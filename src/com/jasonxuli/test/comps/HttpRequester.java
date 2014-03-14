@@ -17,7 +17,12 @@ import android.os.Message;
 
 import com.jasonxuli.test.utils.GlobalData;
 
-
+@Deprecated
+/**
+ * want to make this class a base class of all http request( api loader and image loader),
+ * but it seems not so reasonable.
+ * @author VTX
+ */
 public class HttpRequester extends AsyncTask<String, Integer, byte[]> {
 
 	public static final String GET = "GET";
@@ -75,10 +80,6 @@ public class HttpRequester extends AsyncTask<String, Integer, byte[]> {
 	    	
 	    	conn.connect();
 		    in = new BufferedInputStream(conn.getInputStream());
-//		    int byteLen = in.available();
-//		    response = new byte[byteLen];
-//		    in.read(response);
-//		    System.out.println(response.length);
 		    BufferedReader bReader = new BufferedReader(new InputStreamReader(in));
 		    ByteArrayBuffer bab = new ByteArrayBuffer(0);
 		    int pos = 0;

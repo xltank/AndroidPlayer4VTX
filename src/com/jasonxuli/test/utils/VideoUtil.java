@@ -19,7 +19,7 @@ public class VideoUtil {
     	try {
     		obj = (JSONObject) new JSONTokener(json).nextValue();
     		
-			System.out.println(obj);
+//			System.out.println(obj);
 			JSONArray items = obj.getJSONArray("items");
 			JSONObject item = items.getJSONObject(0);
 			VideoInfo video = new VideoInfo();

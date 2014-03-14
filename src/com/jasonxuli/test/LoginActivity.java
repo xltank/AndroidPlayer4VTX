@@ -1,8 +1,5 @@
 package com.jasonxuli.test;
 
-import java.io.UnsupportedEncodingException;
-import java.util.concurrent.ExecutionException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -10,6 +7,7 @@ import org.json.JSONTokener;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,10 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.jasonxuli.test.comps.Facade;
-import com.jasonxuli.test.comps.HttpParamsVTX;
-import com.jasonxuli.test.comps.HttpRequester;
+import com.jasonxuli.test.comps.ImageLoader;
+import com.jasonxuli.test.comps.ImageManager;
 import com.jasonxuli.test.utils.GlobalData;
 import com.jasonxuli.test.vo.Manager;
 import com.jasonxuli.test.vo.Publisher;
@@ -40,31 +39,10 @@ public class LoginActivity extends Activity {
 	
 	private void test()
 	{
-		String params = new HttpParamsVTX("format", "mrss", "videoId", "137687869375381505", "publisherId", "94986174405279744").toString();
-    	HttpRequester requester = new HttpRequester(testHandler, 
-    			"http://api.staging.video-tx.com/public/video",
-    			//http://my.staging.video-tx.com/static/images/logo/logo.png,
-    			HttpRequester.GET, 
-    			params);
-		requester.execute();
+    	ImageManager.ins().loadImage(
+    			"http://www.video-tx.com/wp-content/uploads/2012/01/logo.png"
+    			, (ImageView) findViewById(R.id.welcome_image));
 	}
-	final Handler testHandler = new Handler()
-	{
-		@Override
-    	public void handleMessage(Message msg) 
-		{
-			super.handleMessage(msg);
-			try {
-				String str = new String(msg.getData().getByteArray("result"), "UTF-8");
-				System.out.println(str);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	};
-	
-	
 	
 
     public void onLoginClick(View v)
@@ -82,7 +60,7 @@ public class LoginActivity extends Activity {
     	public void handleMessage(Message msg) {
     		super.handleMessage(msg);
     		String result = msg.getData().getString("result");
-    		System.out.println(result);
+//    		System.out.println(result);
 
     		JSONObject json = null;
 			try {

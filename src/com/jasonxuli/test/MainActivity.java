@@ -20,8 +20,6 @@ import android.widget.ListView;
 
 import com.jasonxuli.test.comps.APILoader;
 import com.jasonxuli.test.comps.Facade;
-import com.jasonxuli.test.comps.HttpParamsVTX;
-import com.jasonxuli.test.comps.HttpRequester;
 import com.jasonxuli.test.comps.PopupConfirm;
 import com.jasonxuli.test.comps.VideoListArrayAdapter;
 import com.jasonxuli.test.constants.APIConstant;
@@ -44,17 +42,17 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 49152 kib
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        GlobalData.IMAGE_CACHE_SIZE = maxMemory/8 ; // use 1/8 memory for image cache.
+        
         setContentView(R.layout.activity_main);
-        
-        System.out.println("activity w " + getWindow().getDecorView().getWidth()+ " -- h " + getWindow().getDecorView().getHeight());
-        
         
         // when add onClickHandler in ListView in layout xml, 
         // a Exception: error inflating class android.widget.listview
         videoList = (ListView) findViewById(R.id.videoList);
         videoList.setOnItemClickListener(onVideoListItemClickHandler);
         
-        System.out.println("Main Activity");
         if(GlobalData.token == null)
         {
         	Intent loginIntent = new Intent(this, LoginActivity.class);
@@ -74,7 +72,6 @@ public class MainActivity extends Activity {
     		super.handleMessage(msg);
     		
     		String result = msg.getData().getString("result");
-    		System.out.println(result);
     		GlobalData.videos = new ArrayList<Video>();
     		try {
 				JSONArray videos = (JSONArray) new JSONTokener(result).nextValue();
@@ -151,14 +148,6 @@ public class MainActivity extends Activity {
     	startActivity(intent);
     }
 
-    
-//    public void showPopup()
-//    {
-//    	PopupMessage popup = new PopupMessage(this, "Information", "This is a information from TestApp.");
-//		popup.show();
-//		System.out.println("show popup");
-//    }
-    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) 

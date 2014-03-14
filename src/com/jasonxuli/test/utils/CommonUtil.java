@@ -24,7 +24,7 @@ public class CommonUtil {
     	try {
 			DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
 			dom = domBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
-			System.out.println(dom.getTextContent());
+//			System.out.println(dom.getTextContent());
 			return dom;
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
@@ -79,5 +79,10 @@ public class CommonUtil {
 			source = filler + source;
 		
 		return source ;
+	}
+	
+	public static String getHTTPFileName(String url)
+	{
+		return url.substring(url.lastIndexOf("/"));
 	}
 }
