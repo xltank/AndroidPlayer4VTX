@@ -12,4 +12,5 @@ public class APIConstant {
 	
 	public static String LOGIN = "login";
 	public static String GET_RECENT_VIDEOS = "getRecentVideos";
+	public static String GET_PLAYLISTS = "getPlaylists";
 }

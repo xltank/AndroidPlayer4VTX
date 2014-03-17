@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/videolist_item_height" 
+    android:layout_height="@dimen/video_list_item_height" 
     android:orientation="horizontal"
     android:weightSum="1"
     android:paddingLeft="5dp"
@@ -11,30 +11,30 @@
     >
 
     <ImageView
-        android:id="@+id/image_item_videolist"
-        android:layout_width="@dimen/videolist_item_image_width"
-        android:layout_height="@dimen/videolist_item_image_height"
+        android:id="@+id/image_item_video_list"
+        android:layout_width="@dimen/video_list_item_image_width"
+        android:layout_height="@dimen/video_list_item_image_height"
         android:layout_marginLeft="5dp"
         android:contentDescription="image description"
         android:src="@android:drawable/ic_menu_gallery" />
 
     <TextView 
-        android:id="@+id/title_item_videolist"
+        android:id="@+id/title_item_video_list"
         android:textColor="#3e3e3e"
     	android:textSize="14sp"
     	android:layout_width="0dp"
     	android:layout_weight="0.7"
-        android:layout_height="@dimen/videolist_item_image_height"
+        android:layout_height="@dimen/video_list_item_image_height"
         android:layout_marginLeft="3dp"
         />
     
     <TextView 
-        android:id="@+id/duration_item_videolist"
+        android:id="@+id/duration_item_video_list"
         android:textColor="#3e3e3e"
     	android:textSize="14sp"
     	android:layout_width="0dp"
     	android:layout_weight="0.3"
-        android:layout_height="@dimen/videolist_item_image_height"
+        android:layout_height="@dimen/video_list_item_image_height"
         android:layout_marginLeft="3dp"
         />
     

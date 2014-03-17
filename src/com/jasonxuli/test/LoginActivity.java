@@ -31,6 +31,11 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// 49152 kib
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        GlobalData.IMAGE_CACHE_SIZE = maxMemory/8 ; // use 1/8 memory for image cache.
+		
 		setContentView(R.layout.activity_login);
 		setupActionBar();
 		
@@ -87,7 +92,7 @@ public class LoginActivity extends Activity {
     };
     
     private void toMainPage(){
-    	Intent intent = new Intent(this, MainActivity.class);
+    	Intent intent = new Intent(this, VideoAndPlayListActivity.class);
     	startActivity(intent);
     }
 	

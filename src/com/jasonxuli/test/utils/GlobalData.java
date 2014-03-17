@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jasonxuli.test.comps.ImageManager;
 import com.jasonxuli.test.vo.Manager;
+import com.jasonxuli.test.vo.Playlist;
 import com.jasonxuli.test.vo.Publisher;
 import com.jasonxuli.test.vo.Video;
 
@@ -20,5 +21,6 @@ public class GlobalData {
 	
 	
 	public static List<Video> videos;
+	public static List<Playlist> playlists;
 	
 }

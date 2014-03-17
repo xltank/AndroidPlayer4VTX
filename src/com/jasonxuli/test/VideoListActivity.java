@@ -6,11 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +30,7 @@ import com.jasonxuli.test.utils.VideoUtil;
 import com.jasonxuli.test.vo.Video;
 import com.jasonxuli.test.vo.VideoInfo;
 
-public class MainActivity extends Activity {
+public class VideoListActivity extends FragmentActivity {
 
 	protected APILoader apiLoader;
 	
@@ -42,11 +42,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 49152 kib
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        GlobalData.IMAGE_CACHE_SIZE = maxMemory/8 ; // use 1/8 memory for image cache.
-        
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_video_list);
         
         // when add onClickHandler in ListView in layout xml, 
         // a Exception: error inflating class android.widget.listview
@@ -59,7 +55,7 @@ public class MainActivity extends Activity {
         	startActivity(loginIntent);
         }else
         {
-        	Facade.ins().getRecentVideos(onGetRecentVideosHandler, "10", "1");
+        	Facade.ins().getRecentVideos(onGetRecentVideosHandler, "20", "1");
         }
     }
     
@@ -83,7 +79,7 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 			}
     		
-    		VideoListArrayAdapter adapter = new VideoListArrayAdapter(MainActivity.this, R.layout.item_videolist, GlobalData.videos);
+    		VideoListArrayAdapter adapter = new VideoListArrayAdapter(VideoListActivity.this, R.layout.item_video_list, GlobalData.videos);
     		videoList.setAdapter(adapter);
     	}
     };
@@ -94,9 +90,9 @@ public class MainActivity extends Activity {
     	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     	{
     		final Video video = (Video) parent.getItemAtPosition(position);
-    		if(!CommonUtil.isWIFI(MainActivity.this))
+    		if(!CommonUtil.isWIFI(VideoListActivity.this))
     		{
-    			final PopupConfirm popup = new PopupConfirm(MainActivity.this, 
+    			final PopupConfirm popup = new PopupConfirm(VideoListActivity.this, 
     					getString(R.string.warning), 
     					getString(R.string.no_wifi_message));
     			popup.setOKButton(new OnClickListener() 

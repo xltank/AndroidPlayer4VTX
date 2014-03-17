@@ -1,10 +1,6 @@
 package com.jasonxuli.test.comps;
 
-import java.lang.ref.SoftReference;
-import java.util.concurrent.ConcurrentHashMap;
-
-import com.jasonxuli.test.utils.CommonUtil;
-import com.jasonxuli.test.utils.GlobalData;
+import java.lang.ref.WeakReference;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +8,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.LruCache;
 import android.widget.ImageView;
+
+import com.jasonxuli.test.utils.CommonUtil;
+import com.jasonxuli.test.utils.GlobalData;
 
 
 /**
@@ -45,6 +44,23 @@ public class ImageManager {
 	}
 	
 	
+	public void loadImage(String url, ImageView imageView, int inSampleSize)
+	{
+		Bitmap bm = cache.get(url);
+		if(bm != null)
+		{
+			System.out.println("from cache"+url);
+			imageView.setImageBitmap(bm);
+			return ;
+		}
+		
+		bm = getFromDisk(url, imageView);
+		if(bm != null)
+			imageView.setImageBitmap(bm);
+		
+		bm = getFromServer(url, imageView, inSampleSize);
+	}
+	
 	public void loadImage(String url, ImageView imageView)
 	{
 		Bitmap bm = cache.get(url);
@@ -54,27 +70,30 @@ public class ImageManager {
 			return ;
 		}
 		
-//		bm = getFromDisk(url, imageView);
-//		if(bm != null)
-//			imageView.setImageBitmap(bm);
+		bm = getFromDisk(url, imageView);
+		if(bm != null)
+			imageView.setImageBitmap(bm);
 		
-		bm = getFromServer(url, imageView);
+		bm = getFromServer(url, imageView, 1);
 	}
 	
-//	private Bitmap getFromDisk(String url, ImageView imageView)
-//	{
-//		// get bitmap from disk
-//		
-//		// put bitmap to cache
-//		
-//		
-//		return null;
-//	}
 	
-	private Bitmap getFromServer(String url, ImageView imageView)
+	private Bitmap getFromDisk(String url, ImageView imageView)
 	{
+		// get bitmap from disk
+		
+		// put bitmap to cache
+		
+		
+		return null;
+	}
+	
+	
+	private Bitmap getFromServer(String url, ImageView imageView, int inSampleSize)
+	{
+		System.out.println("from server : " + CommonUtil.getHTTPFileName(url));
 		// get bitmap from server
-		ImageLoader loader = new ImageLoader(new BitmapHandler(url, imageView), url);
+		ImageLoader loader = new ImageLoader(new BitmapHandler(url, imageView, inSampleSize), url);
     	loader.execute();
 		
 		// put bitmap to cache
@@ -86,11 +105,14 @@ public class ImageManager {
 	private class BitmapHandler extends Handler
 	{
 		private String _url;
-		private ImageView _imageView;
-		public BitmapHandler(String url, ImageView imageView)
+		private WeakReference<ImageView> _imageViewRef;
+		private int _inSampleSize;
+		
+		public BitmapHandler(String url, ImageView imageView, int inSampleSize)
 		{
 			_url = url;
-			_imageView = imageView;
+			_imageViewRef = new WeakReference<ImageView>(imageView);
+			_inSampleSize = inSampleSize;
 		}
 		
 		@Override
@@ -99,23 +121,25 @@ public class ImageManager {
 			super.handleMessage(msg);
 			
 			byte[] bytes = msg.getData().getByteArray("result");
-//			BitmapFactory.Options options = new 
-			Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-			_imageView.setImageBitmap(bm);
-			cache.put(_url, bm);
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inSampleSize = _inSampleSize;
+			Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+			_imageViewRef.get().setImageBitmap(bm);
+			putBitmapToCache(_url, bm);
 		}
 	};
 	
 	
-	private void putBitmapToCache(Bitmap bm)
+	private void putBitmapToCache(String url, Bitmap bm)
 	{
-		
+		if(cache.get(url) == null)
+			cache.put(url, bm);
 	}
 	
 	
-	private void putBitmapToDisk(Bitmap bm)
-	{
-		
-	}
+//	private void putBitmapToDisk(Bitmap bm)
+//	{
+//		
+//	}
 	
 }

@@ -12,12 +12,13 @@ import android.widget.TextView;
 
 import com.jasonxuli.test.R;
 import com.jasonxuli.test.utils.CommonUtil;
+import com.jasonxuli.test.vo.Playlist;
 import com.jasonxuli.test.vo.Video;
 
 
-public class VideoListArrayAdapter extends ArrayAdapter<Video> {
+public class PlaylistListArrayAdapter extends ArrayAdapter<Playlist> {
 
-	public VideoListArrayAdapter(Context context, int resourceId, List<Video> objects)
+	public PlaylistListArrayAdapter(Context context, int resourceId, List<Playlist> objects)
 	{
 		super(context, resourceId, objects);
 	}
@@ -34,19 +35,16 @@ public class VideoListArrayAdapter extends ArrayAdapter<Video> {
 			view = inflater.inflate(R.layout.item_video_list, null, false);
 		}
 		
-		ImageView imageView = (ImageView) view.findViewById(R.id.image_item_video_list);
+//		ImageView imageView = (ImageView) view.findViewById(R.id.image_item_video_list);
 		TextView titleText = (TextView) view.findViewById(R.id.title_item_video_list);
 		TextView durationText = (TextView) view.findViewById(R.id.duration_item_video_list);
 		
-		Video video = getItem(position);
+		Playlist list = getItem(position);
 		
-//		imageView.setImageURI(Uri.parse(video.getSnapshotUrl()));
+//		ImageManager.ins().loadImage(list.getThumbnailUrl(), imageView, 2);
 		
-		System.out.println("url : " + CommonUtil.getHTTPFileName(video.getThumbnailUrl()));
-		ImageManager.ins().loadImage(video.getThumbnailUrl(), imageView, 2);
-		
-		titleText.setText(video.getTitle());
-		durationText.setText(CommonUtil.formatDuration(video.getDuration()));
+		titleText.setText(list.getTitle());
+		durationText.setText(list.getVideoIds().length + " video(s)");
 		
 		return view;
     }

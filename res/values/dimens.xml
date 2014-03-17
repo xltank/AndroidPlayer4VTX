@@ -7,9 +7,13 @@
     <dimen name="popup_common_width">100dp</dimen>
     <dimen name="popup_common_height">100dp</dimen>
     
-    <dimen name="videolist_item_height">65dp</dimen>
-    <dimen name="videolist_item_image_width">75dp</dimen>
-    <dimen name="videolist_item_image_height">55dp</dimen>
+    <dimen name="video_list_item_height">65dp</dimen>
+    <dimen name="video_list_item_image_width">75dp</dimen>
+    <dimen name="video_list_item_image_height">55dp</dimen>
+    
+    <dimen name="playlist_list_item_height">65dp</dimen>
+    <dimen name="playlist_list_item_image_width">75dp</dimen>
+    <dimen name="playlist_list_item_image_height">55dp</dimen>
     
     
 </resources>

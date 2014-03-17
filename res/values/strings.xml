@@ -20,6 +20,8 @@
     <!-- activity_main -->
     <string name="main_title">Main Panel</string>
     <string name="main_view_video">View Video</string>
+    <string name="video_list_tab_title">Videos</string>
+    <string name="playlist_tab_title">PlayLists</string>
     
     <!-- activity_login -->
     <string name="login_title">Login Panel</string>
