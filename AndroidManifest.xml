@@ -20,8 +20,7 @@
         
         <activity
             android:name="com.jasonxuli.test.LoginActivity"
-            android:label="@string/login_title" 
-            android:parentActivityName="com.jasonxuli.test.VideoListActivity" >
+            android:label="@string/main_title" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -49,7 +48,7 @@
         <activity
             android:name="com.jasonxuli.test.ViewVideoActivity"
             android:label="@string/view_video_title"
-            android:parentActivityName="com.jasonxuli.test.VideoListActivity" >
+            android:parentActivityName="com.jasonxuli.test.VideoAndPlayListActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
