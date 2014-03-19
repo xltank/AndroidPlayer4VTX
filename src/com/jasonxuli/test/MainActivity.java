@@ -33,7 +33,7 @@ import com.jasonxuli.test.vo.Playlist;
 import com.jasonxuli.test.vo.Video;
 import com.jasonxuli.test.vo.VideoInfo;
 
-public class VideoAndPlayListActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity {
 
 	protected APILoader apiLoader;
 	
@@ -47,7 +47,7 @@ public class VideoAndPlayListActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video_playlist);
+        setContentView(R.layout.activity_main);
         
         TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
         tabHost.setup();
@@ -93,7 +93,7 @@ public class VideoAndPlayListActivity extends FragmentActivity {
 				e.printStackTrace();
 			}
     		
-    		VideoListArrayAdapter adapter = new VideoListArrayAdapter(VideoAndPlayListActivity.this, R.layout.item_video_list, GlobalData.videos);
+    		VideoListArrayAdapter adapter = new VideoListArrayAdapter(MainActivity.this, R.layout.item_video_list, GlobalData.videos);
     		videoList.setAdapter(adapter);
     	}
     };
@@ -104,9 +104,9 @@ public class VideoAndPlayListActivity extends FragmentActivity {
     	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     	{
     		final Video video = (Video) parent.getItemAtPosition(position);
-    		if(!CommonUtil.isWIFI(VideoAndPlayListActivity.this))
+    		if(!CommonUtil.isWIFI(MainActivity.this))
     		{
-    			final PopupConfirm popup = new PopupConfirm(VideoAndPlayListActivity.this, 
+    			final PopupConfirm popup = new PopupConfirm(MainActivity.this, 
     					getString(R.string.warning), 
     					getString(R.string.no_wifi_message));
     			popup.setOKButton(new OnClickListener() 
@@ -145,7 +145,7 @@ public class VideoAndPlayListActivity extends FragmentActivity {
 				e.printStackTrace();
 			}
     		
-    		PlaylistListArrayAdapter adapter = new PlaylistListArrayAdapter(VideoAndPlayListActivity.this, R.layout.item_playlist_list, GlobalData.playlists);
+    		PlaylistListArrayAdapter adapter = new PlaylistListArrayAdapter(MainActivity.this, R.layout.item_playlist_list, GlobalData.playlists);
     		playlistList.setAdapter(adapter);
     	}
     };
@@ -155,9 +155,9 @@ public class VideoAndPlayListActivity extends FragmentActivity {
     	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     	{
     		final Playlist video = (Playlist) parent.getItemAtPosition(position);
-    		if(!CommonUtil.isWIFI(VideoAndPlayListActivity.this))
+    		if(!CommonUtil.isWIFI(MainActivity.this))
     		{
-    			final PopupConfirm popup = new PopupConfirm(VideoAndPlayListActivity.this, 
+    			final PopupConfirm popup = new PopupConfirm(MainActivity.this, 
     					getString(R.string.warning), 
     					getString(R.string.no_wifi_message));
     			popup.setOKButton(new OnClickListener() 

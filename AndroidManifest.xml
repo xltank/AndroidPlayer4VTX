@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -37,7 +37,7 @@
 <!--         </activity> -->
 
 		<activity
-            android:name="com.jasonxuli.test.VideoAndPlayListActivity"
+            android:name="com.jasonxuli.test.MainActivity"
             android:label="@string/main_title" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -48,7 +48,7 @@
         <activity
             android:name="com.jasonxuli.test.ViewVideoActivity"
             android:label="@string/view_video_title"
-            android:parentActivityName="com.jasonxuli.test.VideoAndPlayListActivity" >
+            android:parentActivityName="com.jasonxuli.test.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

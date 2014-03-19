@@ -92,7 +92,7 @@ public class LoginActivity extends Activity {
     };
     
     private void toMainPage(){
-    	Intent intent = new Intent(this, VideoAndPlayListActivity.class);
+    	Intent intent = new Intent(this, MainActivity.class);
     	startActivity(intent);
     }
 	

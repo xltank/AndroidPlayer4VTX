@@ -42,7 +42,7 @@ public class VideoListActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video_list);
+        setContentView(R.layout.fragment_video_list);
         
         // when add onClickHandler in ListView in layout xml, 
         // a Exception: error inflating class android.widget.listview
