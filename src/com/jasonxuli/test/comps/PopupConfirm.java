@@ -71,7 +71,8 @@ public class PopupConfirm {
 	{
 		LayoutInflater inflater = (LayoutInflater) _activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		_view = inflater.inflate(R.layout.popup_common, null);
-		_popup = new PopupWindow(_view, 400, LayoutParams.WRAP_CONTENT);
+		// TODO: add max width.
+		_popup = new PopupWindow(_view, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		_popup.setOutsideTouchable(true);
 		_popup.setFocusable(true);
 		setTitle(_title);

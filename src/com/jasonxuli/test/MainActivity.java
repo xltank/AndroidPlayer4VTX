@@ -104,7 +104,7 @@ public class MainActivity extends FragmentActivity {
     	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     	{
     		final Video video = (Video) parent.getItemAtPosition(position);
-    		if(!CommonUtil.isWIFI(MainActivity.this))
+    		if(!GlobalData.mobile_data_allowed && !CommonUtil.isWIFI(MainActivity.this))
     		{
     			final PopupConfirm popup = new PopupConfirm(MainActivity.this, 
     					getString(R.string.warning), 
@@ -114,6 +114,8 @@ public class MainActivity extends FragmentActivity {
 					@Override
 					public void onClick(View v) 
 					{
+						popup.dismiss();
+						GlobalData.mobile_data_allowed = true;
 						getVideoInfo(video);
 					}
 				});
@@ -166,6 +168,7 @@ public class MainActivity extends FragmentActivity {
 					public void onClick(View v) 
 					{
 						getPlaylistInfo(video);
+						popup.dismiss();
 					}
 				});
     			popup.show();
@@ -177,6 +180,7 @@ public class MainActivity extends FragmentActivity {
 	};
 	
 	
+	/////////// video
 	private void getVideoInfo(Video video)
 	{
 		Facade.ins().getVideoInfo(
@@ -194,12 +198,17 @@ public class MainActivity extends FragmentActivity {
     		
     		String result = msg.getData().getString("result");
     		curVideoInfo = VideoUtil.parseVideoInfoJSON(result);
-    		
+    		if(curVideoInfo.renditions.size() == 0)
+    		{
+    			System.err.println("ERROR: rendition size = 0");
+    			return ;
+    		}
     		viewVideo();
     	}
     };
     
     
+    /////////// playlist
     private void getPlaylistInfo(Playlist playlist)
 	{
 		Facade.ins().getVideoInfo(

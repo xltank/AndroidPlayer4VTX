@@ -11,6 +11,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -84,5 +85,20 @@ public class CommonUtil {
 	public static String getHTTPFileName(String url)
 	{
 		return url.substring(url.lastIndexOf("/"));
+	}
+	
+	
+	public static Point getSuitableSize(int w, int h, int containerW, int containerH)
+	{
+		int resultW = 0, resultH = 0;
+		if(w/h >= containerW/containerH)
+		{
+			resultW = containerW;
+			resultH = h * resultW/w ;
+		}else {
+			resultH = containerH;
+			resultW = w * resultH/h ;
+		}
+		return new Point(resultW, resultH);
 	}
 }

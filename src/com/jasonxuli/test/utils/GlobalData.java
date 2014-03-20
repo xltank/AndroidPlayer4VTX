@@ -2,7 +2,6 @@ package com.jasonxuli.test.utils;
 
 import java.util.List;
 
-import com.jasonxuli.test.comps.ImageManager;
 import com.jasonxuli.test.vo.Manager;
 import com.jasonxuli.test.vo.Playlist;
 import com.jasonxuli.test.vo.Publisher;
@@ -13,6 +12,9 @@ public class GlobalData {
 	public static String apiDomain = "http://api.staging.video-tx.com/";
 	
 	public static String token = "";
+	
+	// If true, viewing video is allowed in 2G/3G.
+	public static Boolean mobile_data_allowed = false; 
 	
 	public static int IMAGE_CACHE_SIZE = 100;
 	

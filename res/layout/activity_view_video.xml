@@ -12,8 +12,9 @@
     <RelativeLayout 
         android:layout_width="match_parent"
     	android:layout_height="0dp"
-    	android:layout_weight="1">
-
+    	android:layout_weight="0.4"
+    	>
+		
         <SurfaceView 
             android:id="@+id/playerView"
 	        android:layout_width="match_parent"
@@ -31,52 +32,66 @@
 	        android:layout_height="wrap_content"
 	        android:text="@string/view_video_title" 
 	        />
+        
+        <LinearLayout 
+	        android:orientation="vertical"
+			android:layout_width="match_parent"
+	    	android:layout_height="50dp"
+	    	android:layout_alignParentBottom="true"
+	    	android:layout_alignParentLeft="true">
+	        
+	        <SeekBar
+	            android:id="@+id/seekBar"
+	            android:layout_width="match_parent"
+	            android:layout_height="20dp"
+	            android:thumb="@drawable/thumb"
+	            />
+<!--            android:progressDrawable="@drawable/progress_bar_skin" -->
+	        <LinearLayout 
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+		    	android:layout_height="30dp">
+		        <ImageButton 
+		            android:id="@+id/play_button"
+		            android:layout_width="30dp"
+		            android:layout_height="wrap_content"
+		            android:contentDescription="@string/button_desc"
+		            android:src="@drawable/play_button"
+		            style="?android:attr/borderlessButtonStyle"/>
+		        <ImageButton 
+		            android:id="@+id/pause_button"
+		            android:layout_width="30dp"
+		            android:layout_height="wrap_content"
+		            android:src="@drawable/pause_button"
+		            android:contentDescription="@string/button_desc"
+		            android:visibility="visible"
+		            style="?android:attr/borderlessButtonStyle"/>
+		        
+		        <TextView android:id="@+id/time"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"/>
+		        
+			</LinearLayout>
+    	</LinearLayout>
     </RelativeLayout>
+    
+    <LinearLayout android:id="@+id/gap"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="10dp">
+        
+    </LinearLayout>
     
     <LinearLayout 
         android:orientation="vertical"
-		android:layout_width="match_parent"
-    	android:layout_height="50dp">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6">
         
-        <SeekBar
+        <TextView android:id="@+id/video_desc"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:thumb="@drawable/thumb"
-            />
-<!--             android:progressDrawable="@drawable/progress_bar_skin" -->
-        
-        <LinearLayout 
-			android:orientation="horizontal"
-			android:layout_width="match_parent"
-	    	android:layout_height="30dp">
-<!--         <RelativeLayout  -->
-<!--             android:layout_width="wrap_content" -->
-<!-- 	        android:layout_height="wrap_content"> -->
-	        <ImageButton 
-	            android:id="@+id/play_button"
-	            android:layout_width="30dp"
-	            android:layout_height="wrap_content"
-	            android:contentDescription="@string/button_desc"
-	            android:src="@drawable/play_button"
-	            style="?android:attr/borderlessButtonStyle"/>
-	        <ImageButton 
-	            android:id="@+id/pause_button"
-	            android:layout_width="30dp"
-	            android:layout_height="wrap_content"
-	            android:src="@drawable/pause_button"
-	            android:contentDescription="@string/button_desc"
-	            android:visibility="visible"
-	            style="?android:attr/borderlessButtonStyle"/>
-<!--         </RelativeLayout> -->
-<!--         <ImageButton  -->
-<!--             android:id="@+id/stop_button" -->
-<!--             android:layout_width="30dp" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:contentDescription="@string/button_desc" -->
-<!--             android:src="@drawable/stop_button" -->
-<!--             style="?android:attr/borderlessButtonStyle"/> -->
-		</LinearLayout>
+            android:layout_height="match_parent"
+            android:text="This is video description."/>
     </LinearLayout>
-    
 
 </LinearLayout>
