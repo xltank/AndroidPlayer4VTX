@@ -9,7 +9,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ViewVideoActivity" >
 
-    <RelativeLayout 
+<!-- 	<RelativeLayout -->
+    <com.jasonxuli.test.comps.CustomRelativeLayout
+        android:id="@+id/playerContainer"
         android:layout_width="match_parent"
     	android:layout_height="0dp"
     	android:layout_weight="0.4"
@@ -19,6 +21,7 @@
             android:id="@+id/playerView"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
+	        android:layout_centerInParent="true"
 	        />
 	    <ImageView
 	        android:id="@+id/snapshot"
@@ -26,54 +29,67 @@
 	        android:layout_height="match_parent"
 	        android:contentDescription="@string/button_desc"
 	    	/>
-        <TextView
-	        android:id="@+id/video_title"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/view_video_title" 
-	        />
         
         <LinearLayout 
 	        android:orientation="vertical"
 			android:layout_width="match_parent"
-	    	android:layout_height="50dp"
+	    	android:layout_height="wrap_content"
 	    	android:layout_alignParentBottom="true"
-	    	android:layout_alignParentLeft="true">
+	    	android:layout_alignParentLeft="true"
+	    	android:background="@color/player_controlbar_bg"
+	    	android:alpha="0.7">
 	        
 	        <SeekBar
 	            android:id="@+id/seekBar"
 	            android:layout_width="match_parent"
-	            android:layout_height="20dp"
-	            android:thumb="@drawable/thumb"
+	            android:layout_height="8dp"
+	            android:thumbOffset="6dp"
+	            android:thumb="@drawable/seekbar_thumb"
+	            android:progressDrawable="@drawable/progress_bar_skin"
+	            android:paddingLeft="8dp"
+	            android:paddingRight="8dp"
+	            android:layout_marginTop="5dp"
 	            />
-<!--            android:progressDrawable="@drawable/progress_bar_skin" -->
+<!-- 	            android:thumb="@drawable/thumb" -->
 	        <LinearLayout 
 				android:orientation="horizontal"
 				android:layout_width="match_parent"
-		    	android:layout_height="30dp">
-		        <ImageButton 
-		            android:id="@+id/play_button"
-		            android:layout_width="30dp"
+		    	android:layout_height="30dp"
+		    	>
+		    	
+	            <RelativeLayout 
+	                android:layout_width="30dp"
 		            android:layout_height="wrap_content"
-		            android:contentDescription="@string/button_desc"
-		            android:src="@drawable/play_button"
-		            style="?android:attr/borderlessButtonStyle"/>
-		        <ImageButton 
-		            android:id="@+id/pause_button"
-		            android:layout_width="30dp"
-		            android:layout_height="wrap_content"
-		            android:src="@drawable/pause_button"
-		            android:contentDescription="@string/button_desc"
-		            android:visibility="visible"
-		            style="?android:attr/borderlessButtonStyle"/>
+		            android:layout_gravity="center_vertical"
+		            >
+			        <ImageButton 
+			            android:id="@+id/play_button"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:contentDescription="@string/button_desc"
+			            android:src="@drawable/play_button"
+			            style="?android:attr/borderlessButtonStyle"/>
+			        <ImageButton 
+			            android:id="@+id/pause_button"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:src="@drawable/pause_button"
+			            android:contentDescription="@string/button_desc"
+			            android:visibility="invisible"
+			            style="?android:attr/borderlessButtonStyle"/>
+		        </RelativeLayout>
 		        
 		        <TextView android:id="@+id/time"
 	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"/>
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical"
+	                android:textColor="@color/play_time"
+	                />
 		        
 			</LinearLayout>
     	</LinearLayout>
-    </RelativeLayout>
+<!--     </RelativeLayout > -->
+	</com.jasonxuli.test.comps.CustomRelativeLayout>
     
     <LinearLayout android:id="@+id/gap"
         android:orientation="horizontal"
@@ -87,6 +103,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.6">
+        
+        <TextView
+	        android:id="@+id/video_title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/view_video_title" 
+	        />
         
         <TextView android:id="@+id/video_desc"
             android:layout_width="match_parent"

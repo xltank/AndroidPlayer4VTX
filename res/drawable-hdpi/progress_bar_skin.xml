@@ -1,29 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@android:id/background">
-		<shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background" android:top="10dp">
+		<shape android:shape="rectangle">
 	        <gradient
-	                android:startColor="#99333333"
-	                android:centerColor="#99555555"
+	                android:startColor="#FF333333"
+	                android:centerColor="#FF333333"
 	                android:centerY="1.0"
-	                android:endColor="#99888888"
+	                android:endColor="#FF333333"
 	                android:angle="270"
-	        />
+	       			/>
+<!-- 	        <padding  -->
+<!-- 	        	    android:top="5dp" -->
+<!-- 	        	    android:bottom="5dp" -->
+<!-- 	        	    android:left="5dp" -->
+<!-- 	        	    android:right="5dp" -->
+<!-- 	        	    /> -->
 		</shape>
 	</item>
-
-	<item android:id="@android:id/progress">
-		<clip>
-	        <shape>
-	            <gradient
-	                android:startColor="#99aaaaaa"
-	                android:centerColor="#99cccccc"
+	
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+	        <shape android:shape="rectangle">
+	        	<gradient
+	                android:startColor="#FF009900"
+	                android:centerColor="#FF009900"
 	                android:centerY="1.0"
-	                android:endColor="#99ffffff"
+	                android:endColor="#FF009900"
 	                android:angle="270"
 	            />
+	        	<padding 
+	        	    android:top="5dp"
+	        	    android:bottom="5dp"
+	        	    />
 	        </shape>
 	    </clip>
     </item>
 
+	<item android:id="@android:id/progress">
+		<clip >
+	        <shape android:shape="rectangle">
+	        	<gradient
+	                android:startColor="#FF00FF00"
+	                android:centerColor="#FF00FF00"
+	                android:centerY="1.0"
+	                android:endColor="#FF00FF00"
+	                android:angle="270"
+	            />
+	        	<padding 
+	        	    android:top="5dp"
+	        	    android:bottom="5dp"
+	        	    />
+	        	<size android:height="3dp"/>
+	        </shape>
+	    </clip>
+    </item>
+    
 </layer-list>

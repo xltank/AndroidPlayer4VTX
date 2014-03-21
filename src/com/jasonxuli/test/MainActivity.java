@@ -19,13 +19,13 @@ import android.widget.TabHost;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.jasonxuli.test.comps.APILoader;
-import com.jasonxuli.test.comps.Facade;
 import com.jasonxuli.test.comps.PlaylistListArrayAdapter;
 import com.jasonxuli.test.comps.PopupConfirm;
 import com.jasonxuli.test.comps.VideoListArrayAdapter;
 import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.constants.MessageConstant;
+import com.jasonxuli.test.control.APILoader;
+import com.jasonxuli.test.control.Facade;
 import com.jasonxuli.test.utils.CommonUtil;
 import com.jasonxuli.test.utils.GlobalData;
 import com.jasonxuli.test.utils.VideoUtil;
@@ -37,6 +37,7 @@ public class MainActivity extends FragmentActivity {
 
 	protected APILoader apiLoader;
 	
+	private String curVideoInfoJSON ;
 	protected VideoInfo curVideoInfo = null; 
 	
 	private ListView videoList;
@@ -196,8 +197,8 @@ public class MainActivity extends FragmentActivity {
     	public void handleMessage(Message msg){
     		super.handleMessage(msg);
     		
-    		String result = msg.getData().getString("result");
-    		curVideoInfo = VideoUtil.parseVideoInfoJSON(result);
+    		curVideoInfoJSON = msg.getData().getString("result");
+    		curVideoInfo = VideoUtil.parseVideoInfoJSON(curVideoInfoJSON);
     		if(curVideoInfo.renditions.size() == 0)
     		{
     			System.err.println("ERROR: rendition size = 0");
@@ -236,8 +237,7 @@ public class MainActivity extends FragmentActivity {
     public void viewVideo()
     {
     	Intent intent = new Intent(this, ViewVideoActivity.class);
-    	String videoUrl = curVideoInfo.renditions.get(0).getUrl();
-    	intent.putExtra(MessageConstant.VIDEO_URL, videoUrl);
+    	intent.putExtra(MessageConstant.VIDEO_INFO_JSON, curVideoInfoJSON);
     	startActivity(intent);
     }
 

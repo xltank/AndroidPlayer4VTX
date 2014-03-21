@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jasonxuli.test.R;
+import com.jasonxuli.test.control.ImageManager;
 import com.jasonxuli.test.utils.CommonUtil;
 import com.jasonxuli.test.vo.Video;
 

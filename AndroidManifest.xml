@@ -22,7 +22,8 @@
         
         <activity
             android:name="com.jasonxuli.test.LoginActivity"
-            android:label="@string/main_title" >
+            android:label="@string/main_title" 
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

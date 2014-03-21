@@ -19,9 +19,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.jasonxuli.test.comps.Facade;
-import com.jasonxuli.test.comps.ImageLoader;
-import com.jasonxuli.test.comps.ImageManager;
+import com.jasonxuli.test.control.Facade;
+import com.jasonxuli.test.control.ImageLoader;
+import com.jasonxuli.test.control.ImageManager;
 import com.jasonxuli.test.utils.GlobalData;
 import com.jasonxuli.test.vo.Manager;
 import com.jasonxuli.test.vo.Publisher;

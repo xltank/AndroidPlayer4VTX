@@ -70,7 +70,10 @@ public class CommonUtil {
 		int second = seconds%60;
 		String secondStr = fillWith(second+"", "0", 2);
 		
-		return hourStr+":"+minuteStr+":"+secondStr;
+		if(hour == 0)
+			return minuteStr+":"+secondStr;
+		else
+			return hourStr+":"+minuteStr+":"+secondStr;
 	}
 	
 	
@@ -101,4 +104,5 @@ public class CommonUtil {
 		}
 		return new Point(resultW, resultH);
 	}
+	
 }

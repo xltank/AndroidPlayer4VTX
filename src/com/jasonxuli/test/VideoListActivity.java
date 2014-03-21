@@ -18,12 +18,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.jasonxuli.test.comps.APILoader;
-import com.jasonxuli.test.comps.Facade;
 import com.jasonxuli.test.comps.PopupConfirm;
 import com.jasonxuli.test.comps.VideoListArrayAdapter;
 import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.constants.MessageConstant;
+import com.jasonxuli.test.control.APILoader;
+import com.jasonxuli.test.control.Facade;
 import com.jasonxuli.test.utils.CommonUtil;
 import com.jasonxuli.test.utils.GlobalData;
 import com.jasonxuli.test.utils.VideoUtil;
