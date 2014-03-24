@@ -9,7 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ViewVideoActivity" >
 
-<!-- 	<RelativeLayout -->
     <com.jasonxuli.test.comps.CustomRelativeLayout
         android:id="@+id/playerContainer"
         android:layout_width="match_parent"
@@ -64,15 +63,15 @@
 		            >
 			        <ImageButton 
 			            android:id="@+id/play_button"
-			            android:layout_width="wrap_content"
-			            android:layout_height="wrap_content"
+			            android:layout_width="@dimen/play_control_button_size"
+			            android:layout_height="@dimen/play_control_button_size"
 			            android:contentDescription="@string/button_desc"
 			            android:src="@drawable/play_button"
 			            style="?android:attr/borderlessButtonStyle"/>
 			        <ImageButton 
 			            android:id="@+id/pause_button"
-			            android:layout_width="wrap_content"
-			            android:layout_height="wrap_content"
+			            android:layout_width="@dimen/play_control_button_size"
+			            android:layout_height="@dimen/play_control_button_size"
 			            android:src="@drawable/pause_button"
 			            android:contentDescription="@string/button_desc"
 			            android:visibility="invisible"
@@ -86,9 +85,29 @@
 	                android:textColor="@color/play_time"
 	                />
 		        
+		        <RelativeLayout 
+	                android:layout_width="30dp"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="center_vertical"
+		            >
+			        <ImageButton 
+			            android:id="@+id/fullscreen_button"
+			            android:layout_width="@dimen/play_control_button_size"
+			            android:layout_height="@dimen/play_control_button_size"
+			            android:contentDescription="@string/button_desc"
+			            android:src="@drawable/fullscreen_button"
+			            style="?android:attr/borderlessButtonStyle"/>
+			        <ImageButton 
+			            android:id="@+id/fullscreen_exit_button"
+			            android:layout_width="@dimen/play_control_button_size"
+			            android:layout_height="@dimen/play_control_button_size"
+			            android:src="@drawable/fullscreen_exit_button"
+			            android:contentDescription="@string/button_desc"
+			            android:visibility="invisible"
+			            style="?android:attr/borderlessButtonStyle"/>
+		        </RelativeLayout>
 			</LinearLayout>
     	</LinearLayout>
-<!--     </RelativeLayout > -->
 	</com.jasonxuli.test.comps.CustomRelativeLayout>
     
     <LinearLayout android:id="@+id/gap"
@@ -99,10 +118,12 @@
     </LinearLayout>
     
     <LinearLayout 
+        android:id="@+id/video_info"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.6">
+        android:layout_weight="0.6"
+        >
         
         <TextView
 	        android:id="@+id/video_title"
@@ -113,8 +134,7 @@
         
         <TextView android:id="@+id/video_desc"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="This is video description."/>
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
 </LinearLayout>

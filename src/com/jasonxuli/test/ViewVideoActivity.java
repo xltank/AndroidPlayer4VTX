@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -28,8 +29,10 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -59,6 +62,8 @@ public class ViewVideoActivity extends Activity
 	private SeekBar seekBar;
 	private ImageButton playButton;
 	private ImageButton pauseButton;
+	private ImageButton fullScreenButton;
+	private ImageButton fullScreenExitButton;
 	private TextView videoTitle;
 	private TextView videoDesc;
 	
@@ -72,7 +77,7 @@ public class ViewVideoActivity extends Activity
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 		setContentView(R.layout.activity_view_video);
-		setupActionBar();
+//		setupActionBar();
 		
 		Intent intent = getIntent();
 		String videoJSON = intent.getStringExtra(MessageConstant.VIDEO_INFO_JSON);
@@ -115,6 +120,12 @@ public class ViewVideoActivity extends Activity
 		
 		pauseButton = (ImageButton) findViewById(R.id.pause_button);
 		pauseButton.setOnClickListener(onPauseButtonClick);
+		
+		fullScreenButton = (ImageButton) findViewById(R.id.fullscreen_button);
+		fullScreenButton.setOnClickListener(onFullScreenButtonClick);
+		
+		fullScreenExitButton = (ImageButton) findViewById(R.id.fullscreen_exit_button);
+		fullScreenExitButton.setOnClickListener(onFullScreenExitButtonClick);
 		
 		videoTitle = (TextView) findViewById(R.id.video_title);
 		videoTitle.setText(videoInfo.title);
@@ -227,12 +238,15 @@ public class ViewVideoActivity extends Activity
 	
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+		System.out.println("surface Changed");
 	}
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+		System.out.println("surface Destroyed");
 	}
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
+		System.out.println("surface Created");
 		playStart();
 	}
 
@@ -344,6 +358,54 @@ public class ViewVideoActivity extends Activity
 			player.pause();
 			playButton.setVisibility(View.VISIBLE);
 			pauseButton.setVisibility(View.INVISIBLE);
+		}
+	};
+	
+	private OnClickListener onFullScreenButtonClick = new OnClickListener() 
+	{
+		@Override
+		public void onClick(View v) 
+		{
+			player.pause();
+			fullScreenButton.setVisibility(View.INVISIBLE);
+			fullScreenExitButton.setVisibility(View.VISIBLE);
+			
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			
+			WindowManager.LayoutParams attrs = getWindow().getAttributes();
+			attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+			getWindow().setAttributes(attrs);
+			
+			findViewById(R.id.gap).setVisibility(View.GONE);
+			findViewById(R.id.video_info).setVisibility(View.GONE);
+			
+//			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(1,1);
+//			lp.weight = 1;
+//			findViewById(R.id.playerContainer).setLayoutParams(lp);
+		}
+	};
+	
+	private OnClickListener onFullScreenExitButtonClick = new OnClickListener() 
+	{
+		@Override
+		public void onClick(View v) 
+		{
+			player.pause();
+			fullScreenButton.setVisibility(View.VISIBLE);
+			fullScreenExitButton.setVisibility(View.INVISIBLE);
+			
+			findViewById(R.id.gap).setVisibility(View.VISIBLE);
+			findViewById(R.id.video_info).setVisibility(View.VISIBLE);
+			
+//			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(1,1);
+//			lp.weight = 0.4F;
+//			findViewById(R.id.playerContainer).setLayoutParams(lp);
+			
+			WindowManager.LayoutParams attrs = getWindow().getAttributes();
+			attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
+			getWindow().setAttributes(attrs);
+			
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 	};
 	

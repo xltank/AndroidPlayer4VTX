@@ -121,7 +121,7 @@ public class ImageManager {
 			super.handleMessage(msg);
 			
 			byte[] bytes = msg.getData().getByteArray("result");
-			if(bytes == null && bytes.length == 0)
+			if(bytes == null || bytes.length == 0)
 				return ;
 			
 			BitmapFactory.Options options = new BitmapFactory.Options();

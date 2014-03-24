@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -241,6 +243,21 @@ public class MainActivity extends FragmentActivity {
     	startActivity(intent);
     }
 
+    
+    @Override
+    protected void onStart()
+    {
+    	super.onStart();
+    	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+    
+    @Override
+    protected void onResume()
+    {
+    	super.onResume();
+    	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) 

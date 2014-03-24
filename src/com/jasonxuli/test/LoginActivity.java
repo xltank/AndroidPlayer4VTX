@@ -7,7 +7,6 @@ import org.json.JSONTokener;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.jasonxuli.test.control.Facade;
-import com.jasonxuli.test.control.ImageLoader;
 import com.jasonxuli.test.control.ImageManager;
 import com.jasonxuli.test.utils.GlobalData;
 import com.jasonxuli.test.vo.Manager;
@@ -37,7 +35,7 @@ public class LoginActivity extends Activity {
         GlobalData.IMAGE_CACHE_SIZE = maxMemory/8 ; // use 1/8 memory for image cache.
 		
 		setContentView(R.layout.activity_login);
-		setupActionBar();
+//		setupActionBar();
 		
 		test();
 	}
@@ -100,12 +98,12 @@ public class LoginActivity extends Activity {
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
 	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setupActionBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-	}
+//	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+//	private void setupActionBar() {
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//			getActionBar().setDisplayHomeAsUpEnabled(true);
+//		}
+//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
