@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -17,9 +16,9 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.TabHost;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TabHost;
 
 import com.jasonxuli.test.comps.PlaylistListArrayAdapter;
 import com.jasonxuli.test.comps.PopupConfirm;
@@ -201,9 +200,9 @@ public class MainActivity extends FragmentActivity {
     		
     		curVideoInfoJSON = msg.getData().getString("result");
     		curVideoInfo = VideoUtil.parseVideoInfoJSON(curVideoInfoJSON);
-    		if(curVideoInfo.renditions.size() == 0)
+    		if(curVideoInfo==null || curVideoInfo.renditions.size() == 0)
     		{
-    			System.err.println("ERROR: rendition size = 0");
+    			System.err.println("ERROR: video info error or no playable rendition");
     			return ;
     		}
     		viewVideo();

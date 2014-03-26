@@ -2,4 +2,5 @@
 <resources>
     <color name="player_controlbar_bg">#666666</color>
     <color name="play_time">#E9E9E9</color>
+    <color name="player_view_container_bg">#666666</color>
 </resources>

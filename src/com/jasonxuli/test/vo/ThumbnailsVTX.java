@@ -1,6 +1,6 @@
 package com.jasonxuli.test.vo;
 
-public class ThumbnailsVTX {
+public class ThumbnailsVTX implements Comparable<ThumbnailsVTX>{
 
 	public String url = "";
 	public int width = 0;
@@ -13,4 +13,9 @@ public class ThumbnailsVTX {
 		height = h;
 	}
 	
+	
+	public int compareTo(ThumbnailsVTX item)
+	{
+		return this.width - item.width; 
+	}
 }

@@ -7,13 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jasonxuli.test.R;
-import com.jasonxuli.test.utils.CommonUtil;
 import com.jasonxuli.test.vo.Playlist;
-import com.jasonxuli.test.vo.Video;
 
 
 public class PlaylistListArrayAdapter extends ArrayAdapter<Playlist> {

@@ -94,7 +94,7 @@ public class CommonUtil {
 	public static Point getSuitableSize(int w, int h, int containerW, int containerH)
 	{
 		int resultW = 0, resultH = 0;
-		if(w/h >= containerW/containerH)
+		if((float)w/h >= (float)containerW/containerH)
 		{
 			resultW = containerW;
 			resultH = h * resultW/w ;

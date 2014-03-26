@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
     	android:layout_height="0dp"
     	android:layout_weight="0.4"
+    	android:background="@color/player_view_container_bg"
     	>
 		
         <SurfaceView 
@@ -30,11 +31,14 @@
 	    	/>
         
         <LinearLayout 
+            android:id="@+id/controlBar"
 	        android:orientation="vertical"
 			android:layout_width="match_parent"
 	    	android:layout_height="wrap_content"
 	    	android:layout_alignParentBottom="true"
 	    	android:layout_alignParentLeft="true"
+	    	android:paddingLeft="8dp"
+	    	android:paddingRight="8dp"
 	    	android:background="@color/player_controlbar_bg"
 	    	android:alpha="0.7">
 	        
@@ -45,26 +49,30 @@
 	            android:thumbOffset="6dp"
 	            android:thumb="@drawable/seekbar_thumb"
 	            android:progressDrawable="@drawable/progress_bar_skin"
-	            android:paddingLeft="8dp"
-	            android:paddingRight="8dp"
+	            android:paddingLeft="0dp"
+	            android:paddingRight="0dp"
 	            android:layout_marginTop="5dp"
 	            />
 <!-- 	            android:thumb="@drawable/thumb" -->
-	        <LinearLayout 
+	        <RelativeLayout 
 				android:orientation="horizontal"
 				android:layout_width="match_parent"
 		    	android:layout_height="30dp"
+		    	android:gravity="center_vertical"
 		    	>
 		    	
 	            <RelativeLayout 
-	                android:layout_width="30dp"
+	                android:id="@+id/play_pause_container"
+	                android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
-		            android:layout_gravity="center_vertical"
+		            android:layout_alignParentLeft="true"
 		            >
 			        <ImageButton 
 			            android:id="@+id/play_button"
 			            android:layout_width="@dimen/play_control_button_size"
 			            android:layout_height="@dimen/play_control_button_size"
+			            android:scaleType="fitXY"
+			            android:padding="0dp"
 			            android:contentDescription="@string/button_desc"
 			            android:src="@drawable/play_button"
 			            style="?android:attr/borderlessButtonStyle"/>
@@ -72,6 +80,8 @@
 			            android:id="@+id/pause_button"
 			            android:layout_width="@dimen/play_control_button_size"
 			            android:layout_height="@dimen/play_control_button_size"
+			            android:scaleType="fitXY"
+			            android:padding="0dp"
 			            android:src="@drawable/pause_button"
 			            android:contentDescription="@string/button_desc"
 			            android:visibility="invisible"
@@ -81,19 +91,23 @@
 		        <TextView android:id="@+id/time"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_gravity="center_vertical"
+	                android:gravity="center_vertical"
+	                android:layout_toRightOf="@+id/play_pause_container"
 	                android:textColor="@color/play_time"
+	                android:text="@string/play_time_default"
 	                />
 		        
 		        <RelativeLayout 
-	                android:layout_width="30dp"
+	                android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
-		            android:layout_gravity="center_vertical"
+		            android:layout_alignParentRight="true"
 		            >
 			        <ImageButton 
 			            android:id="@+id/fullscreen_button"
 			            android:layout_width="@dimen/play_control_button_size"
 			            android:layout_height="@dimen/play_control_button_size"
+			            android:scaleType="fitXY"
+			            android:padding="0dp"
 			            android:contentDescription="@string/button_desc"
 			            android:src="@drawable/fullscreen_button"
 			            style="?android:attr/borderlessButtonStyle"/>
@@ -101,12 +115,14 @@
 			            android:id="@+id/fullscreen_exit_button"
 			            android:layout_width="@dimen/play_control_button_size"
 			            android:layout_height="@dimen/play_control_button_size"
+			            android:scaleType="fitXY"
+			            android:padding="0dp"
 			            android:src="@drawable/fullscreen_exit_button"
 			            android:contentDescription="@string/button_desc"
 			            android:visibility="invisible"
 			            style="?android:attr/borderlessButtonStyle"/>
 		        </RelativeLayout>
-			</LinearLayout>
+			</RelativeLayout>
     	</LinearLayout>
 	</com.jasonxuli.test.comps.CustomRelativeLayout>
     

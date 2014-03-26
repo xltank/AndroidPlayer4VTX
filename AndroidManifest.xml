@@ -10,7 +10,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
@@ -54,7 +53,8 @@ this make all theme gone, only black left. -->
         <activity
             android:name="com.jasonxuli.test.ViewVideoActivity"
             android:label="@string/view_video_title"
-            android:parentActivityName="com.jasonxuli.test.MainActivity" >
+            android:parentActivityName="com.jasonxuli.test.MainActivity" 
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

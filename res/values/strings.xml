@@ -34,6 +34,7 @@
     <!-- activity_view_video -->
     <string name="view_video_title">View Video Title</string>
     <string name="button_desc">Button</string>
+    <string name="play_time_default">00:00:00/00:00:00</string>
 
     
     
