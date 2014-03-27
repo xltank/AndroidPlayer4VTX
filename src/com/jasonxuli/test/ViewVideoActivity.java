@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -18,16 +19,12 @@ import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
-import android.media.MediaPlayer.OnTimedTextListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
-import android.media.TimedText;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -64,6 +61,7 @@ public class ViewVideoActivity extends Activity
 	
 	private SurfaceView playerView;
 	private MediaPlayer player;
+	private AudioManager audioManager;
 	
 	private VideoInfo videoInfo;
 	private String videoUrl;
@@ -73,6 +71,13 @@ public class ViewVideoActivity extends Activity
 	private CustomRelativeLayout playerViewContainer;
 	private LinearLayout controlBar;
 	private ImageView snapshot;
+	private RelativeLayout slideSeekHint;
+	private TextView slideSeekTime;
+	private RelativeLayout slideVolumeHint;
+	private TextView slideVolume;
+	private RelativeLayout slideBrightnessHint;
+	private TextView slideBrightness;
+	
 	private TextView timeLabel;
 	private SeekBar seekBar;
 	private ImageButton playButton;
@@ -90,9 +95,10 @@ public class ViewVideoActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.w(LOG_TAG, "ViewVideoActivity  onCreate");
+		
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 		setContentView(R.layout.activity_view_video);
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 //		setupActionBar();
 		
 		Intent intent = getIntent();
@@ -108,11 +114,17 @@ public class ViewVideoActivity extends Activity
 	
 	private void initListeners()
 	{
+		audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+		
 		playerViewContainer = (CustomRelativeLayout) findViewById(R.id.playerContainer);
 		playerViewContainer.setOnSizeChangedListener(onPlayerViewContainerSizeChcanged);
 		
-		playerViewContainer.setOnTouchListener(onPlayerViewContainerTouchListener);
-		playerViewContainer.setOnClickListener(onPlayerViewContainerClickListener);
+		slideSeekHint = (RelativeLayout) findViewById(R.id.slide_seek_hint);
+		slideSeekTime = (TextView) findViewById(R.id.slide_seek_time);
+		slideVolumeHint = (RelativeLayout) findViewById(R.id.slide_volume_hint);
+		slideVolume = (TextView) findViewById(R.id.slide_volume);
+		slideBrightnessHint = (RelativeLayout) findViewById(R.id.slide_brightness_hint);
+		slideBrightness = (TextView) findViewById(R.id.slide_brightness);
 		
 		controlBar = (LinearLayout) findViewById(R.id.controlBar);
 		
@@ -262,11 +274,15 @@ public class ViewVideoActivity extends Activity
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.w(LOG_TAG, "surface Destroyed");
+		playerView.setOnTouchListener(null);
+		playerView.setOnClickListener(null);
 	}
 	// when activity is started/restarted, surface is created.
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.w(LOG_TAG, "surface Created");
+		playerView.setOnTouchListener(onPlayerViewContainerTouchListener);
+		playerView.setOnClickListener(onPlayerViewContainerClickListener);
 		startPlaying();
 	}
 
@@ -337,6 +353,9 @@ public class ViewVideoActivity extends Activity
 				oldW = w;
 				oldH = h;
 				layoutVideo();
+				
+				slideSeekHint.setX((w-slideSeekHint.getWidth())/2);
+				slideSeekHint.setY((h-slideSeekHint.getHeight())/2);
 			}
 		}
 	};
@@ -356,7 +375,7 @@ public class ViewVideoActivity extends Activity
 			return ;
 		
 		Point newSize = CommonUtil.getSuitableSize(videoWidth, videoHeight, containerW, containerH);
-		Log.w(LOG_TAG, newSize.x + "," + newSize.y);
+//		Log.w(LOG_TAG, newSize.x + "," + newSize.y);
 		// !!! when setLayoutParams is called rapidly, video will not show.
 		playerView.setLayoutParams(new RelativeLayout.LayoutParams(newSize.x, newSize.y));
 		
@@ -449,73 +468,93 @@ public class ViewVideoActivity extends Activity
 	private final int BOTTOM = 4;
 	final OnTouchListener onPlayerViewContainerTouchListener = new OnTouchListener() 
 	{	
-		int type=0; // progress=1, volume=2, brightness=3;
+//		int type=0; // progress=1, volume=2, brightness=3;
 		int direction=0; // left=1, right=2, top=3, bottom=4;
 		int area=0; // left part=1, right part=2;
 		float value=0;
+		float lastX=0;
+		float lastY=0;
+		float timeDelta=0;
+		float volumeDelta=0;
+		float brightness=0;
+		
 		@Override
 		public boolean onTouch(View v, MotionEvent event) 
 		{
 			int action = event.getActionMasked();
+			float curX = event.getX();
+			float curY = event.getY();
 			switch(action) {
 		        case (MotionEvent.ACTION_DOWN) :
-		            Log.w(LOG_TAG,"ACTION_DOWN");
-		        	//TODO: show indicator(play time, volume, brightness)
-		        
-		        	//TODO: judge brightness(left) or volume(right)
-		        	int rectW = playerViewContainer.getWidth();
-	        		area = event.getX()*2 < rectW ? 1 : 2;
+	        		area = event.getX()*2 < playerViewContainer.getWidth() ? 1 : 2;
+		        	lastX = curX;
+		        	lastY = curY;
 		            return true;
 		        case (MotionEvent.ACTION_MOVE) :
-		        	float xValue = event.getX()-event.getHistoricalX(event.getHistorySize());
-		        	float yValue = event.getY()-event.getHistoricalY(event.getHistorySize());
-		        	Log.w(LOG_TAG,"ACTION_MOVE" + xValue + "," + yValue);
+		        	// getHistoricalX()/getHistoricalY() is not perfect, for sometime getHistorySize() == 0.
+		        	float xValue = curX - lastX;
+		        	float yValue = curY - lastY;
+		        	if(xValue == 0 && yValue == 0) // first move event.
+		        		return true;
+//		        	Log.w(LOG_TAG, (curX - lastX) + ", " + xValue);
 		        	
-		        	if(direction == 0) // get type(direction)
+		        	if(direction == 0)
 		        	{
-			        	// 5 : minimal x/y value to trigger this kind of quick operation for the first move.
-			        	if(Math.abs(xValue) < 5 || Math.abs(yValue) < 5)
-			        		return true;
-			        	
 			        	float diff = Math.abs(xValue) - Math.abs(yValue);
-			        	if(diff > 0)
+			        	if(diff >= 0)
 			        		direction = xValue > 0 ? RIGHT : LEFT;
 		        		else
 		        			direction = yValue > 0 ? BOTTOM : TOP;
 		        	}
-		        	//TODO: calculate real value.
-		        	switch (direction) {
-						case LEFT:
-							value = xValue;
-							break;
-						case RIGHT:
-							value = xValue;
-							break;
-						case TOP:
-							
-							break;
-						case BOTTOM:
-							
-							break;
-					}
+		        	if(direction == LEFT || direction == RIGHT)
+						value = xValue;
+		        	else // if(direction == TOP || direction == BOTTOM)
+						value = yValue;
+//		        	Log.w(LOG_TAG, "direction: " + direction + "," + value + "," + (curX - lastX));
 		        	
-		            
+		        	if(direction == LEFT || direction == RIGHT) // progress
+		        	{
+		        		autoHide(slideSeekHint, 1000);
+		        		timeDelta += value * 200; // time delta = 1/5 * xValue.
+		        		float targetTime = player.getCurrentPosition() + timeDelta;
+		        		if(targetTime < 0 || targetTime > duration)
+		        			return true; // TODO : or close this touch action.
+		        		slideSeekTime.setText(CommonUtil.formatDuration((long)targetTime));
+		        	}else if(area == 1)  // brightness
+		        	{
+		        		
+		        	}else if(area == 2)  // volume
+		        	{
+		        		// TODO: show volume slider.
+		        		int curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		        		volumeDelta += value * 0.01;
+		        		float targetVolume = curVolume + volumeDelta;
+		        		if(targetVolume < 0 || targetVolume > 1)
+		        			return true ;// TODO : or close this touch action.
+		        		slideVolume.setText(targetVolume);
+		        		Log.w(LOG_TAG, "Volume: " + (int)(curVolume*100));
+		        	}
+		        	
+		        	lastX = curX;
+		        	lastY = curY;
 		            return true;
 		        case (MotionEvent.ACTION_UP) :
-		            Log.w(LOG_TAG,"ACTION_UP");
+//		            Log.w(LOG_TAG,"ACTION_UP");
+		        	if(direction == LEFT || direction == RIGHT)
+		        		player.seekTo((int)(player.getCurrentPosition() + timeDelta));
+		        	else if(area == 1)
+		        		player.setVolume(player., rightVolume);
+//		        	else if(area == 2)
+//		        		player.br
 		        	direction = 0;
-		        	type = 0;
-		            return true;
-		        case (MotionEvent.ACTION_CANCEL) :
-		            Log.w(LOG_TAG,"ACTION_CANCEL");
+		        	timeDelta = 0;
 		            return true;
 		        case (MotionEvent.ACTION_OUTSIDE) :
-		            Log.w(LOG_TAG,"ACTION_OUTSIDE");
-			        direction = 0;
-		        	type = 0;
+//		            Log.w(LOG_TAG,"ACTION_OUTSIDE");
+		        	direction = 0;
+		        	timeDelta = 0;
 		            return true;      
 		    }      
-			// TODO: left->rewind, right->fast forward, left part->brightness, right part->volume.
 			
 			return false;
 		}
@@ -526,21 +565,27 @@ public class ViewVideoActivity extends Activity
 		@Override
 		public void onClick(View v) 
 		{
-			controlBar.setVisibility(View.VISIBLE);
-			if (AUTO_HIDE) 
-			{
-				mHideHandler.removeCallbacks(mHideRunnable);
-				mHideHandler.postDelayed(mHideRunnable, AUTO_HIDE_DELAY_MILLIS);
+			autoHide(controlBar, AUTO_HIDE_DELAY_MILLIS);
+		}
+	};
+	private void autoHide(View v, int duration)
+	{
+		final View view = v;
+		Handler mHideHandler = new Handler();
+		Runnable mHideRunnable = new Runnable() {
+			@Override
+			public void run() {
+				view.setVisibility(View.INVISIBLE);
 			}
+		};
+		view.setVisibility(View.VISIBLE);
+		if (AUTO_HIDE) 
+		{
+			mHideHandler.removeCallbacks(mHideRunnable);
+			mHideHandler.postDelayed(mHideRunnable, duration);
 		}
-	};
-	Handler mHideHandler = new Handler();
-	Runnable mHideRunnable = new Runnable() {
-		@Override
-		public void run() {
-			controlBar.setVisibility(View.INVISIBLE);
-		}
-	};
+	}
+	
 	
 	
 	
