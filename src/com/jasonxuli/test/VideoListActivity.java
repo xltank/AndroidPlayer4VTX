@@ -117,7 +117,7 @@ public class VideoListActivity extends FragmentActivity {
 				video.getId(), 
 				video.getPublisherId(), 
     			APIConstant.DEFAULT_RESULT_FORMAT, 
-    			APIConstant.DEFAULT_VIDEO_TYPES);
+    			APIConstant.VIDEO_TYPE_MP4);
 	}
 	
     

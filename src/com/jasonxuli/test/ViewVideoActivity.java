@@ -23,6 +23,8 @@ import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings.SettingNotFoundException;
+import android.provider.Settings.System;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -35,6 +37,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -71,11 +74,11 @@ public class ViewVideoActivity extends Activity
 	private CustomRelativeLayout playerViewContainer;
 	private LinearLayout controlBar;
 	private ImageView snapshot;
-	private RelativeLayout slideSeekHint;
+	private View slideSeekHint;
 	private TextView slideSeekTime;
-	private RelativeLayout slideVolumeHint;
+	private View slideVolumeHint;
 	private TextView slideVolume;
-	private RelativeLayout slideBrightnessHint;
+	private View slideBrightnessHint;
 	private TextView slideBrightness;
 	
 	private TextView timeLabel;
@@ -88,7 +91,7 @@ public class ViewVideoActivity extends Activity
 	private TextView videoDesc;
 	
 	private int bufferPercent;
-	private int duration;
+	private long duration;
 	private int videoWidth;
 	private int videoHeight;
 	
@@ -105,6 +108,9 @@ public class ViewVideoActivity extends Activity
 		String videoJSON = intent.getStringExtra(MessageConstant.VIDEO_INFO_JSON);
 		videoInfo = VideoUtil.parseVideoInfoJSON(videoJSON);
 		videoUrl = videoInfo.renditions.get(0).getUrl();
+		duration = videoInfo.renditions.get(0).getDuration();
+		videoWidth = videoInfo.renditions.get(0).getWidth();
+		videoHeight = videoInfo.renditions.get(0).getHeight();
 		
 		// should we remove all listeners? 
 		//or we need not to do that because they are all in the same activity?
@@ -119,11 +125,11 @@ public class ViewVideoActivity extends Activity
 		playerViewContainer = (CustomRelativeLayout) findViewById(R.id.playerContainer);
 		playerViewContainer.setOnSizeChangedListener(onPlayerViewContainerSizeChcanged);
 		
-		slideSeekHint = (RelativeLayout) findViewById(R.id.slide_seek_hint);
+		slideSeekHint = findViewById(R.id.slide_seek_hint);
 		slideSeekTime = (TextView) findViewById(R.id.slide_seek_time);
-		slideVolumeHint = (RelativeLayout) findViewById(R.id.slide_volume_hint);
+		slideVolumeHint = findViewById(R.id.slide_volume_hint);
 		slideVolume = (TextView) findViewById(R.id.slide_volume);
-		slideBrightnessHint = (RelativeLayout) findViewById(R.id.slide_brightness_hint);
+		slideBrightnessHint = findViewById(R.id.slide_brightness_hint);
 		slideBrightness = (TextView) findViewById(R.id.slide_brightness);
 		
 		controlBar = (LinearLayout) findViewById(R.id.controlBar);
@@ -203,10 +209,12 @@ public class ViewVideoActivity extends Activity
 	////////////// player event listeners
 	
 	public void onPrepared(MediaPlayer mp) {
-//		Log.w(LOG_TAG, "onPrepared");
-		duration = player.getDuration();
-		videoWidth = player.getVideoWidth();
-		videoHeight = player.getVideoHeight();
+		if(duration <= 0)
+			duration = player.getDuration();
+		if(videoWidth <= 0)
+			videoWidth = player.getVideoWidth();
+		if(videoHeight <= 0)
+			videoHeight = player.getVideoHeight();
 		layoutVideo();
 	}
 	
@@ -214,12 +222,10 @@ public class ViewVideoActivity extends Activity
 	}
 	
 	public void onBufferingUpdate(MediaPlayer mp, int percent) {
-//		Log.w(LOG_TAG, "onBufferingUpdate : " + percent);
 		bufferPercent = percent;
 	}
 
 	public boolean onInfo(MediaPlayer mp, int what, int extra) {
-//		Log.w(LOG_TAG, "onInfo : " + what + " , "  + extra);
 		switch (what) {
 		case MediaPlayer.MEDIA_INFO_UNKNOWN :
 			break;
@@ -356,6 +362,12 @@ public class ViewVideoActivity extends Activity
 				
 				slideSeekHint.setX((w-slideSeekHint.getWidth())/2);
 				slideSeekHint.setY((h-slideSeekHint.getHeight())/2);
+				
+				slideVolumeHint.setX((w-slideVolumeHint.getWidth())/2);
+				slideVolumeHint.setY((h-slideVolumeHint.getHeight())/2);
+				
+				slideBrightnessHint.setX((w-slideBrightnessHint.getWidth())/2);
+				slideBrightnessHint.setY((h-slideBrightnessHint.getHeight())/2);
 			}
 		}
 	};
@@ -475,8 +487,11 @@ public class ViewVideoActivity extends Activity
 		float lastX=0;
 		float lastY=0;
 		float timeDelta=0;
+		float timeTarget=0;
 		float volumeDelta=0;
-		float brightness=0;
+		float volumeTarget=0;
+		float brightnessDelta=0;
+		float brightnessTarget=0;
 		
 		@Override
 		public boolean onTouch(View v, MotionEvent event) 
@@ -509,30 +524,63 @@ public class ViewVideoActivity extends Activity
 		        	if(direction == LEFT || direction == RIGHT)
 						value = xValue;
 		        	else // if(direction == TOP || direction == BOTTOM)
-						value = yValue;
+						value = -yValue;
 //		        	Log.w(LOG_TAG, "direction: " + direction + "," + value + "," + (curX - lastX));
 		        	
 		        	if(direction == LEFT || direction == RIGHT) // progress
 		        	{
-		        		autoHide(slideSeekHint, 1000);
-		        		timeDelta += value * 200; // time delta = 1/5 * xValue.
-		        		float targetTime = player.getCurrentPosition() + timeDelta;
-		        		if(targetTime < 0 || targetTime > duration)
+		        		timeDelta += value * 50; // time delta = 1/20 * xValue.
+		        		timeTarget = player.getCurrentPosition() + timeDelta;
+		        		if(timeTarget < 0 || timeTarget > duration)
 		        			return true; // TODO : or close this touch action.
-		        		slideSeekTime.setText(CommonUtil.formatDuration((long)targetTime));
-		        	}else if(area == 1)  // brightness
+		        		slideSeekTime.setText(CommonUtil.formatDuration((long)timeTarget)+"/"+CommonUtil.formatDuration((long)duration));
+		        		autoHide(slideSeekHint, 1000);
+		        	}
+		        	else if(area == 1)  // brightness
 		        	{
+		        		brightnessDelta += value * 0.1;
+		        		int curBrightness = 0;
+						try {
+							curBrightness = System.getInt(getContentResolver(), System.SCREEN_BRIGHTNESS);
+							LayoutParams lp = getWindow().getAttributes();
+							Log.w(LOG_TAG, "curBrightness " + curBrightness + ", " + lp.screenBrightness);
+						}
+						catch (SettingNotFoundException e) {
+							e.printStackTrace();
+						}
+		        		brightnessTarget = curBrightness + brightnessDelta;
+		        		if(brightnessTarget < 0 || brightnessTarget > 255)
+		        			return true; // TODO : or close this touch action.
+		        		Log.w(LOG_TAG, brightnessDelta + ", " + curBrightness + ", " + brightnessTarget);
+		        		LayoutParams lp = getWindow().getAttributes();
+		        		lp.screenBrightness = brightnessTarget/255;
+		                getWindow().setAttributes(lp);
+		                System.putInt(getContentResolver(), System.SCREEN_BRIGHTNESS, (int)brightnessTarget);
+		                slideBrightness.setText((int)brightnessTarget*100/255 + "%");
+		                autoHide(slideBrightnessHint, 1000);
+		        	}
+		        	else if(area == 2)  // volume
+		        	{
+		        		// TODO: get explicit volume value. Now this method returns volume grade index.
+//		        		int curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//		        		volumeDelta += value * 0.0004;
+//		        		volumeTarget = 0 + volumeDelta;
+//		        		Log.w(LOG_TAG, "Volume: " + volumeDelta + "," + curVolume + "," + volumeTarget);
+//		        		if(volumeTarget < 0 || volumeTarget > 1)
+//		        			return true ;// TODO : or close this touch action.
+//		        		slideVolume.setText((int)(volumeTarget*100)+"%");
+//		        		autoHide(slideVolumeHint, 1000);
 		        		
-		        	}else if(area == 2)  // volume
-		        	{
-		        		// TODO: show volume slider.
-		        		int curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		        		volumeDelta += value * 0.01;
-		        		float targetVolume = curVolume + volumeDelta;
-		        		if(targetVolume < 0 || targetVolume > 1)
-		        			return true ;// TODO : or close this touch action.
-		        		slideVolume.setText(targetVolume);
-		        		Log.w(LOG_TAG, "Volume: " + (int)(curVolume*100));
+		        		int curVolumeIndex = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		        		volumeDelta += value * 0.005; // volume grade index.
+		        		volumeTarget = curVolumeIndex + volumeDelta;
+		        		int volumeIndexMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		        		Log.w(LOG_TAG, "Volume: " + volumeDelta + "," + curVolumeIndex + "," + volumeTarget + "," + volumeIndexMax);
+		        		if(volumeTarget < 0 || volumeTarget > volumeIndexMax)
+		        			return true ;
+		        		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)volumeTarget, AudioManager.FLAG_PLAY_SOUND);
+		        		slideVolume.setText((int)(volumeTarget/volumeIndexMax*100)+"%");
+		        		autoHide(slideVolumeHint, 1000);
 		        	}
 		        	
 		        	lastX = curX;
@@ -542,18 +590,21 @@ public class ViewVideoActivity extends Activity
 //		            Log.w(LOG_TAG,"ACTION_UP");
 		        	if(direction == LEFT || direction == RIGHT)
 		        		player.seekTo((int)(player.getCurrentPosition() + timeDelta));
-		        	else if(area == 1)
-		        		player.setVolume(player., rightVolume);
+//		        	else if(area == 1)
 //		        	else if(area == 2)
-//		        		player.br
+//		        		player.setVolume(volumeTarget, volumeTarget);
 		        	direction = 0;
 		        	timeDelta = 0;
+		        	volumeDelta = 0;
+		        	brightnessDelta = 0;
 		            return true;
 		        case (MotionEvent.ACTION_OUTSIDE) :
 //		            Log.w(LOG_TAG,"ACTION_OUTSIDE");
 		        	direction = 0;
 		        	timeDelta = 0;
-		            return true;      
+		        	volumeDelta = 0;
+		        	brightnessDelta = 0;
+		        	return true;      
 		    }      
 			
 			return false;

@@ -34,46 +34,66 @@
 	        android:id="@+id/slide_seek_hint"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:visibility="invisible"
 	        android:padding="5dp"
 	        android:background="#E6E6E6">
 	        <TextView 
 	            android:id="@+id/slide_seek_time"
 	            android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
+	        	android:text="00:00:00/00:00:00"
 	        	android:textSize="28sp"
 	        	android:textColor="#A8A8A8"
 	            />
 	    </RelativeLayout>
 	    
-	    <RelativeLayout 
+	    <LinearLayout 
 	        android:id="@+id/slide_volume_hint"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:gravity="center_vertical"
+	        android:visibility="invisible"
 	        android:padding="5dp"
 	        android:background="#E6E6E6">
+	        <ImageView 
+	            android:layout_width="wrap_content"
+	        	android:layout_height="wrap_content"
+	        	android:src="@drawable/volume_hint"
+	        	android:contentDescription="@string/button_desc"
+	        	/>
 	        <TextView 
 	            android:id="@+id/slide_volume"
 	            android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
+	        	android:text="100%"
 	        	android:textSize="28sp"
 	        	android:textColor="#A8A8A8"
 	            />
-	    </RelativeLayout>
+	    </LinearLayout>
 	    
-	    <RelativeLayout 
+	    <LinearLayout 
 	        android:id="@+id/slide_brightness_hint"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:gravity="center_vertical"
+	        android:visibility="invisible"
 	        android:padding="5dp"
 	        android:background="#E6E6E6">
+	        <ImageView 
+	            android:layout_width="wrap_content"
+	        	android:layout_height="wrap_content"
+	        	android:src="@drawable/brightness_hint"
+	        	android:contentDescription="@string/button_desc"
+	        	/>
 	        <TextView 
 	            android:id="@+id/slide_brightness"
 	            android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
+	        	android:text="100%"
 	        	android:textSize="28sp"
 	        	android:textColor="#A8A8A8"
 	            />
-	    </RelativeLayout>
+	    </LinearLayout>
         
         <LinearLayout 
             android:id="@+id/controlBar"

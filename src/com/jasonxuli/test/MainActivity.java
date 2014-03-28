@@ -190,7 +190,7 @@ public class MainActivity extends FragmentActivity {
 				video.getId(), 
 				video.getPublisherId(), 
     			APIConstant.DEFAULT_RESULT_FORMAT, 
-    			APIConstant.DEFAULT_VIDEO_TYPES);
+    			APIConstant.VIDEO_TYPE_MP4);
 	}
     final Handler onVideoInfoHandler = new Handler()
     {
@@ -218,7 +218,7 @@ public class MainActivity extends FragmentActivity {
 				playlist.getId(), 
 				playlist.getPublisherId(), 
     			APIConstant.DEFAULT_RESULT_FORMAT, 
-    			APIConstant.DEFAULT_VIDEO_TYPES);
+    			APIConstant.VIDEO_TYPE_MP4);
 	}
     final Handler onPlaylistInfoHandler = new Handler()
     {
