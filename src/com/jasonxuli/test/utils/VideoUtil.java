@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import com.jasonxuli.test.vo.CuePoint;
+import com.jasonxuli.test.vo.PlaylistInfo;
 import com.jasonxuli.test.vo.Rendition;
 import com.jasonxuli.test.vo.ThumbnailsVTX;
 import com.jasonxuli.test.vo.VideoInfo;
@@ -78,4 +79,38 @@ public class VideoUtil {
     	
     	return null;
 	}
+	
+	
+	public static PlaylistInfo parsePlaylistInfoJSON(String json)
+	{
+		JSONObject obj;
+		PlaylistInfo playlist = new PlaylistInfo();
+    	try {
+    		obj = (JSONObject) new JSONTokener(json).nextValue();
+    		
+    		playlist.id = obj.getString("id");
+    		playlist.title = obj.getString("title");
+    		playlist.link = obj.getString("link");
+    		playlist.description = obj.getString("description");
+    		playlist.link = obj.getString("link");
+    		
+			JSONArray items = obj.getJSONArray("items");
+//			JSONArray elements = item.getJSONArray("vtxElements");
+			for(int i=0; i< items.length(); i++)
+			{
+				VideoInfo video = parseVideoInfoJSON((items.getJSONObject(i)).toString());
+				playlist.videos.add(video);
+			}
+			
+			return playlist ;
+			
+    	} catch (JSONException e) {
+			e.printStackTrace();
+		} finally
+		{
+		}
+    	
+    	return null;
+	}
+	
 }

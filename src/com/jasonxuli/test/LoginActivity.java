@@ -14,10 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.jasonxuli.test.control.Facade;
-import com.jasonxuli.test.control.ImageManager;
 import com.jasonxuli.test.utils.GlobalData;
 import com.jasonxuli.test.vo.Manager;
 import com.jasonxuli.test.vo.Publisher;
@@ -34,15 +32,6 @@ public class LoginActivity extends Activity {
 		
 		setContentView(R.layout.activity_login);
 //		setupActionBar();
-		
-		test();
-	}
-	
-	private void test()
-	{
-    	ImageManager.ins().loadImage(
-    			"http://www.video-tx.com/wp-content/uploads/2012/01/logo.png"
-    			, (ImageView) findViewById(R.id.welcome_image));
 	}
 	
 

@@ -11,7 +11,12 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,226 +27,102 @@ import android.widget.TabHost;
 
 import com.jasonxuli.test.comps.PlaylistListArrayAdapter;
 import com.jasonxuli.test.comps.PopupConfirm;
-import com.jasonxuli.test.comps.VideoListArrayAdapter;
 import com.jasonxuli.test.constants.APIConstant;
-import com.jasonxuli.test.constants.MessageConstant;
 import com.jasonxuli.test.control.APILoader;
 import com.jasonxuli.test.control.Facade;
+import com.jasonxuli.test.fragments.PlaylistListFragment;
+import com.jasonxuli.test.fragments.VideoListFragment;
 import com.jasonxuli.test.utils.CommonUtil;
 import com.jasonxuli.test.utils.GlobalData;
-import com.jasonxuli.test.utils.VideoUtil;
 import com.jasonxuli.test.vo.Playlist;
-import com.jasonxuli.test.vo.Video;
-import com.jasonxuli.test.vo.VideoInfo;
 
 public class MainActivity extends FragmentActivity {
 
 	protected APILoader apiLoader;
 	
-	private String curVideoInfoJSON ;
-	protected VideoInfo curVideoInfo = null; 
+	private TabHost tabHost;
+	private ViewPager viewPager;
 	
-	private ListView videoList;
-	private ListView playlistList;
-	
-	
+	private VideoListFragment videoListFragment = new VideoListFragment();
+	private PlaylistListFragment playlistListFragment = new PlaylistListFragment();
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
+        tabHost = (TabHost) findViewById(R.id.tabhost);
         tabHost.setup();
-        tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator(getString(R.string.video_list_tab_title)).setContent(R.id.videoList));
-        tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator(getString(R.string.playlist_tab_title)).setContent(R.id.playList));
+        // contents is hidden.
+        tabHost.addTab(tabHost.newTabSpec("0").setIndicator(getString(R.string.video_list_tab_title)).setContent(R.id.fake_videoList));
+        tabHost.addTab(tabHost.newTabSpec("1").setIndicator(getString(R.string.playlist_tab_title)).setContent(R.id.fake_playList));
+        tabHost.setOnTabChangedListener(onTabChangeListener);
         
-        // when add onClickHandler in ListView in layout xml, 
-        // a Exception: error inflating class android.widget.listview
-        videoList = (ListView) findViewById(R.id.videoList);
-        videoList.setOnItemClickListener(onVideoListItemClickHandler);
-        
-        playlistList = (ListView) findViewById(R.id.playList);
-        playlistList.setOnItemClickListener(onPlaylistItemClickHandler);
+        viewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
+        viewPager.setOnPageChangeListener(onPageChangeListener);
+        viewPager.setAdapter(new ListPagerAdapter(getSupportFragmentManager()));
         
         if(GlobalData.token == null)
         {
         	Intent loginIntent = new Intent(this, LoginActivity.class);
         	startActivity(loginIntent);
-        }else
-        {
-        	Facade.ins().getRecentVideos(onGetRecentVideosHandler, "20", "0");
-        	Facade.ins().getPlaylists(onGetPlaylistsHandler, "20", "0");
         }
     }
     
     
-    final Handler onGetRecentVideosHandler = new Handler()
+    private class ListPagerAdapter extends FragmentPagerAdapter
     {
-    	@Override
-    	public void handleMessage(Message msg)
+    	public ListPagerAdapter(FragmentManager fm)
     	{
-    		super.handleMessage(msg);
-    		
-    		String result = msg.getData().getString("result");
-    		GlobalData.videos = new ArrayList<Video>();
-    		try {
-				JSONArray videos = (JSONArray) new JSONTokener(result).nextValue();
-				for(int i=0; i<videos.length(); i++)
-				{
-					GlobalData.videos.add(new Video(videos.getJSONObject(i)));
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-    		
-    		VideoListArrayAdapter adapter = new VideoListArrayAdapter(MainActivity.this, R.layout.item_video_list, GlobalData.videos);
-    		videoList.setAdapter(adapter);
+    		super(fm);
     	}
-    };
-    
-    
-    final OnItemClickListener onVideoListItemClickHandler = new OnItemClickListener() 
-    {
-    	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-    	{
-    		final Video video = (Video) parent.getItemAtPosition(position);
-    		if(!GlobalData.mobile_data_allowed && !CommonUtil.isWIFI(MainActivity.this))
-    		{
-    			final PopupConfirm popup = new PopupConfirm(MainActivity.this, 
-    					getString(R.string.warning), 
-    					getString(R.string.no_wifi_message));
-    			popup.setOKButton(new OnClickListener() 
-    			{
-					@Override
-					public void onClick(View v) 
-					{
-						popup.dismiss();
-						GlobalData.mobile_data_allowed = true;
-						getVideoInfo(video);
-					}
-				});
-    			popup.show();
-    		}
-    		else {
-    			getVideoInfo(video);
-    		}
-    	}
-	};
-	
-	
-	final Handler onGetPlaylistsHandler = new Handler()
-    {
-    	@Override
-    	public void handleMessage(Message msg)
-    	{
-    		super.handleMessage(msg);
-    		
-    		String result = msg.getData().getString("result");
-    		GlobalData.playlists = new ArrayList<Playlist>();
-    		try {
-				JSONArray playlists = (JSONArray) new JSONTokener(result).nextValue();
-				for(int i=0; i<playlists.length(); i++)
-				{
-					GlobalData.playlists.add(new Playlist(playlists.getJSONObject(i)));
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-    		
-    		PlaylistListArrayAdapter adapter = new PlaylistListArrayAdapter(MainActivity.this, R.layout.item_playlist_list, GlobalData.playlists);
-    		playlistList.setAdapter(adapter);
-    	}
-    };
-    
-    final OnItemClickListener onPlaylistItemClickHandler = new OnItemClickListener() 
-    {
-    	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-    	{
-    		final Playlist video = (Playlist) parent.getItemAtPosition(position);
-    		if(!CommonUtil.isWIFI(MainActivity.this))
-    		{
-    			final PopupConfirm popup = new PopupConfirm(MainActivity.this, 
-    					getString(R.string.warning), 
-    					getString(R.string.no_wifi_message));
-    			popup.setOKButton(new OnClickListener() 
-    			{
-					@Override
-					public void onClick(View v) 
-					{
-						getPlaylistInfo(video);
-						popup.dismiss();
-					}
-				});
-    			popup.show();
-    		}
-    		else {
-    			getPlaylistInfo(video);
-    		}
-    	}
-	};
-	
-	
-	/////////// video
-	private void getVideoInfo(Video video)
-	{
-		Facade.ins().getVideoInfo(
-				onVideoInfoHandler, 
-				video.getId(), 
-				video.getPublisherId(), 
-    			APIConstant.DEFAULT_RESULT_FORMAT, 
-    			APIConstant.VIDEO_TYPE_MP4);
-	}
-    final Handler onVideoInfoHandler = new Handler()
-    {
-    	@Override
-    	public void handleMessage(Message msg){
-    		super.handleMessage(msg);
-    		
-    		curVideoInfoJSON = msg.getData().getString("result");
-    		curVideoInfo = VideoUtil.parseVideoInfoJSON(curVideoInfoJSON);
-    		if(curVideoInfo==null || curVideoInfo.renditions.size() == 0)
-    		{
-    			System.err.println("ERROR: video info error or no playable rendition");
-    			return ;
-    		}
-    		viewVideo();
-    	}
-    };
-    
-    
-    /////////// playlist
-    private void getPlaylistInfo(Playlist playlist)
-	{
-		Facade.ins().getVideoInfo(
-				onPlaylistInfoHandler, 
-				playlist.getId(), 
-				playlist.getPublisherId(), 
-    			APIConstant.DEFAULT_RESULT_FORMAT, 
-    			APIConstant.VIDEO_TYPE_MP4);
-	}
-    final Handler onPlaylistInfoHandler = new Handler()
-    {
-    	@Override
-    	public void handleMessage(Message msg){
-    		super.handleMessage(msg);
-    		// TODO: view playlist.
-//    		String result = msg.getData().getString("result");
-//    		curVideoInfo = VideoUtil.parseVideoInfoJSON(result);
-    		
-//    		viewVideo();
-    	}
-    	
-    };
-    
-    
-    public void viewVideo()
-    {
-    	Intent intent = new Intent(this, ViewVideoActivity.class);
-    	intent.putExtra(MessageConstant.VIDEO_INFO_JSON, curVideoInfoJSON);
-    	startActivity(intent);
-    }
 
+		@Override
+		public Fragment getItem(int pos) {
+			switch (pos) {
+				case 0:
+					return videoListFragment;
+				case 1:
+					return playlistListFragment;
+			}
+			return null;
+		}
+
+		@Override
+		public int getCount() {
+			return 2;
+		}
+    }
+    
+    
+    final TabHost.OnTabChangeListener onTabChangeListener = new TabHost.OnTabChangeListener() 
+    {
+		@Override
+		public void onTabChanged(String tabId) {
+			Log.w("MainActivity", tabId);
+			viewPager.setCurrentItem(Integer.parseInt(tabId));
+		}
+	};
+	
+	final ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() 
+	{
+		@Override
+		public void onPageSelected(int position) {
+			Log.w("MainActivity", "onPageSelected " + position);
+			tabHost.setCurrentTab(position);
+		}
+		
+		@Override
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels){
+//			Log.w("MainActivity", "onPageScrolled " + position + ", " + positionOffset + ", " + positionOffsetPixels);
+		}
+		
+		@Override
+		public void onPageScrollStateChanged(int state) {
+//			Log.w("MainActivity", "onPageScrollStateChanged " + state);
+		}
+	};
+    
     
     @Override
     protected void onStart()

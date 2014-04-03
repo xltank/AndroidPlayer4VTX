@@ -24,7 +24,6 @@ public class PlaylistListArrayAdapter extends ArrayAdapter<Playlist> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) 
 	{
-		System.out.println(position);
 		View view = convertView;
 		if(convertView == null)
 		{
@@ -36,12 +35,13 @@ public class PlaylistListArrayAdapter extends ArrayAdapter<Playlist> {
 		TextView titleText = (TextView) view.findViewById(R.id.title_item_video_list);
 		TextView durationText = (TextView) view.findViewById(R.id.duration_item_video_list);
 		
-		Playlist list = getItem(position);
+		Playlist playlist = getItem(position);
 		
 //		ImageManager.ins().loadImage(list.getThumbnailUrl(), imageView, 2);
 		
-		titleText.setText(list.getTitle());
-		durationText.setText(list.getVideoIds().length + " video(s)");
+		titleText.setText(playlist.getTitle());
+		int playlistLen = playlist.getVideoIds().length;
+		durationText.setText(playlistLen + playlistLen > 1 ? " videos" : " video");
 		
 		return view;
     }

@@ -9,7 +9,7 @@ public class APIConstant {
 	public static String VIDEO_TYPE_M3U8 = "ios";
 	
 	public static String VIDEO_INFO = "public/video";
-
+	public static String PLAYLIST_INFO = "public/playlist";
 	
 	public static String LOGIN = "login";
 	public static String GET_RECENT_VIDEOS = "getRecentVideos";

@@ -30,6 +30,7 @@
     <string name="login_login">Login</string>
     <string name="login_default_email">sifang@163.com</string>
     <string name="login_default_password">111111</string>
+    <string name="image_desc">Image</string>
     
     <!-- activity_view_video -->
     <string name="view_video_title">View Video Title</string>

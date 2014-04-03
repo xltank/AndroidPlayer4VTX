@@ -51,7 +51,8 @@
         android:layout_below="@+id/password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
-        android:src="@drawable/ic_launcher" />
+        android:contentDescription="@string/image_desc"
+        android:src="@drawable/vtx_logo" />
     
     <Button
         android:id="@+id/login_button"

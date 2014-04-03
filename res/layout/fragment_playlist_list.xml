@@ -11,7 +11,7 @@
 	<!-- ### when layout_w/h is set to match_content, listview size will be adjusted many times,
 	     so adapter.getView() will be called many times. -->
     <ListView
-        android:id="@+id/videoList"
+        android:id="@+id/playlistList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:layout_marginTop="10dp" >

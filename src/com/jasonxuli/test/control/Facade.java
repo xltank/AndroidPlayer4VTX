@@ -65,7 +65,7 @@ public class Facade {
 							  			  "format", format, 
 							  			  "types", types).toString();
 		APILoader apiLoader = new APILoader(handler, 
-											GlobalData.apiDomain + APIConstant.VIDEO_INFO, 
+											GlobalData.apiDomain + APIConstant.PLAYLIST_INFO, 
 											APILoader.GET, 
 											params);
 		try {
