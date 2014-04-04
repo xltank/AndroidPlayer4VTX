@@ -23,12 +23,22 @@ public class VideoUtil {
 //			System.out.println(obj);
 			JSONArray items = obj.getJSONArray("items");
 			JSONObject item = items.getJSONObject(0);
+			return parseVideoInfo(item);
+    	} catch (JSONException e) {
+			e.printStackTrace();
+		} finally
+		{}
+    	return null;
+	}
+	
+	private static VideoInfo parseVideoInfo(JSONObject item)
+	{
+		try {
 			VideoInfo video = new VideoInfo();
 			video.id = item.getString("id");
 			video.title = item.getString("title");
 			video.link = item.getString("link");
 			video.description = item.getString("description");
-			video.link = item.getString("link");
 			
 			JSONArray elements = item.getJSONArray("vtxElements");
 			for(int i=0; i< elements.length(); i++){
@@ -73,8 +83,6 @@ public class VideoUtil {
 			return video ;
     	} catch (JSONException e) {
 			e.printStackTrace();
-		} finally
-		{
 		}
     	
     	return null;
@@ -88,17 +96,16 @@ public class VideoUtil {
     	try {
     		obj = (JSONObject) new JSONTokener(json).nextValue();
     		
-    		playlist.id = obj.getString("id");
+//    		playlist.id = obj.getString("id");
     		playlist.title = obj.getString("title");
     		playlist.link = obj.getString("link");
     		playlist.description = obj.getString("description");
-    		playlist.link = obj.getString("link");
     		
 			JSONArray items = obj.getJSONArray("items");
 //			JSONArray elements = item.getJSONArray("vtxElements");
 			for(int i=0; i< items.length(); i++)
 			{
-				VideoInfo video = parseVideoInfoJSON((items.getJSONObject(i)).toString());
+				VideoInfo video = parseVideoInfo(items.getJSONObject(i));
 				playlist.videos.add(video);
 			}
 			
@@ -106,8 +113,6 @@ public class VideoUtil {
 			
     	} catch (JSONException e) {
 			e.printStackTrace();
-		} finally
-		{
 		}
     	
     	return null;
