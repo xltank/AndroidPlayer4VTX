@@ -24,22 +24,16 @@ import com.jasonxuli.test.R;
 import com.jasonxuli.test.ViewVideoActivity;
 import com.jasonxuli.test.comps.PopupConfirm;
 import com.jasonxuli.test.comps.VideoListArrayAdapter;
-import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.constants.MessageConstant;
 import com.jasonxuli.test.control.Facade;
 import com.jasonxuli.test.utils.CommonUtil;
 import com.jasonxuli.test.utils.GlobalData;
-import com.jasonxuli.test.utils.VideoUtil;
 import com.jasonxuli.test.vo.Video;
-import com.jasonxuli.test.vo.VideoInfo;
 
 public class VideoListFragment extends Fragment {
 
 	private ListView videoList;
-	
-	private String curVideoInfoJSON ;
-	protected VideoInfo curVideoInfo = null; 
-	
+	private Video curVideo;
 	
 	public VideoListFragment() {
 	}
@@ -109,7 +103,7 @@ public class VideoListFragment extends Fragment {
     {
     	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     	{
-    		final Video video = (Video) parent.getItemAtPosition(position);
+    		curVideo = (Video) parent.getItemAtPosition(position);
     		if(!GlobalData.mobile_data_allowed && !CommonUtil.isWIFI(getActivity()))
     		{
     			final PopupConfirm popup = new PopupConfirm(getActivity(), 
@@ -122,50 +116,25 @@ public class VideoListFragment extends Fragment {
 					{
 						popup.dismiss();
 						GlobalData.mobile_data_allowed = true;
-						getVideoInfo(video);
+						viewVideo();
 					}
 				});
     			popup.show();
     		}
     		else {
-    			getVideoInfo(video);
+    			viewVideo();
     		}
     	}
 	};
 	
 	
 	/////////// video
-	private void getVideoInfo(Video video)
-	{
-		Facade.ins().getVideoInfo(
-				onVideoInfoHandler, 
-				video.getId(), 
-				video.getPublisherId(), 
-				APIConstant.DEFAULT_RESULT_FORMAT, 
-				APIConstant.VIDEO_TYPE_MP4);
-	}
-	final Handler onVideoInfoHandler = new Handler()
-	{
-		@Override
-		public void handleMessage(Message msg){
-			super.handleMessage(msg);
-			
-			curVideoInfoJSON = msg.getData().getString("result");
-			curVideoInfo = VideoUtil.parseVideoInfoJSON(curVideoInfoJSON);
-			if(curVideoInfo==null || curVideoInfo.renditions.size() == 0)
-			{
-				System.err.println("ERROR: video info error or no playable rendition");
-				return ;
-			}
-			viewVideo();
-		}
-	};
-
 	
 	public void viewVideo()
     {
     	Intent intent = new Intent(getActivity(), ViewVideoActivity.class);
-    	intent.putExtra(MessageConstant.VIDEO_INFO_JSON, curVideoInfoJSON);
+    	intent.putExtra(MessageConstant.VIDEO_ID, curVideo.getId());
+    	intent.putExtra(MessageConstant.PUBLISHER_ID, curVideo.getPublisherId());
     	startActivity(intent);
     }
 	

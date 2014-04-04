@@ -23,6 +23,7 @@ import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings.SettingNotFoundException;
 import android.provider.Settings.System;
 import android.support.v4.app.NavUtils;
@@ -47,10 +48,15 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.jasonxuli.test.comps.CustomRelativeLayout;
+import com.jasonxuli.test.comps.PlayPauseButton;
+import com.jasonxuli.test.comps.PlayPauseButton.OnPlayButtonStateChangeListener;
+import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.constants.MessageConstant;
+import com.jasonxuli.test.control.Facade;
 import com.jasonxuli.test.control.ImageManager;
 import com.jasonxuli.test.utils.CommonUtil;
 import com.jasonxuli.test.utils.VideoUtil;
+import com.jasonxuli.test.vo.PlaylistInfo;
 import com.jasonxuli.test.vo.ThumbnailsVTX;
 import com.jasonxuli.test.vo.VideoInfo;
 
@@ -61,6 +67,12 @@ public class ViewVideoActivity extends Activity
 	private final String LOG_TAG = "ViewVideoActivity";
 	private final boolean AUTO_HIDE = true;
 	private final int AUTO_HIDE_DELAY_MILLIS = 3000;
+	
+	private String curVideoInfoJSON ;
+	private VideoInfo curVideoInfo; 
+	
+	private String curPlaylistInfoJSON;
+	private PlaylistInfo curPlaylistInfo;
 	
 	private SurfaceView playerView;
 	private MediaPlayer player;
@@ -83,8 +95,9 @@ public class ViewVideoActivity extends Activity
 	
 	private TextView timeLabel;
 	private SeekBar seekBar;
-	private ImageButton playButton;
-	private ImageButton pauseButton;
+	private PlayPauseButton playPauseButton;
+//	private ImageButton playButton;
+//	private ImageButton pauseButton;
 	private ImageButton fullScreenButton;
 	private ImageButton fullScreenExitButton;
 	private TextView videoTitle;
@@ -105,18 +118,86 @@ public class ViewVideoActivity extends Activity
 //		setupActionBar();
 		
 		Intent intent = getIntent();
-		String videoJSON = intent.getStringExtra(MessageConstant.VIDEO_INFO_JSON);
-		videoInfo = VideoUtil.parseVideoInfoJSON(videoJSON);
-		videoUrl = videoInfo.renditions.get(0).getUrl();
-		duration = videoInfo.renditions.get(0).getDuration();
-		videoWidth = videoInfo.renditions.get(0).getWidth();
-		videoHeight = videoInfo.renditions.get(0).getHeight();
-		
-		// should we remove all listeners? 
-		//or we need not to do that because they are all in the same activity?
-		initListeners(); 
-		initPlayer();
+		String videoId = intent.getStringExtra(MessageConstant.VIDEO_ID);
+		String playlistId = intent.getStringExtra(MessageConstant.PLAYLIST_ID);
+		String publisherId = intent.getStringExtra(MessageConstant.PUBLISHER_ID);
+		if(videoId != null && publisherId != null)
+		{
+			getVideoInfo(videoId, publisherId);
+		}
+		else if(playlistId != null && publisherId != null)
+		{
+			getPlaylistInfo(playlistId, publisherId);
+		}
 	}
+	
+	/////////// video
+	private void getVideoInfo(String videoId, String publisherId)
+	{
+		Facade.ins().getVideoInfo(
+				onVideoInfoHandler, 
+				videoId, 
+				publisherId, 
+				APIConstant.DEFAULT_RESULT_FORMAT, 
+				APIConstant.VIDEO_TYPE_MP4);
+	}
+	final Handler onVideoInfoHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg){
+			super.handleMessage(msg);
+			
+			curVideoInfoJSON = msg.getData().getString("result");
+			curVideoInfo = VideoUtil.parseVideoInfoJSON(curVideoInfoJSON);
+			if(curVideoInfo==null || curVideoInfo.renditions.size() == 0)
+			{
+				Log.e(LOG_TAG, "ERROR: video info error or no playable rendition");
+				return ;
+			}
+
+			videoInfo = VideoUtil.parseVideoInfoJSON(curVideoInfoJSON);
+			videoUrl = videoInfo.renditions.get(0).getUrl();
+			duration = videoInfo.renditions.get(0).getDuration();
+			videoWidth = videoInfo.renditions.get(0).getWidth();
+			videoHeight = videoInfo.renditions.get(0).getHeight();
+			
+			// should we remove all listeners? 
+			//or we need not to do that because they are all in the same activity?
+			initListeners(); 
+			initPlayer();
+		}
+	};
+	
+	/////////// playlist
+	private void getPlaylistInfo(String playlistId, String publisherId)
+	{
+		Facade.ins().getPlaylistInfo(
+				onPlaylistInfoHandler, 
+				playlistId, 
+				publisherId, 
+				APIConstant.DEFAULT_RESULT_FORMAT, 
+				APIConstant.VIDEO_TYPE_MP4);
+	}
+	final Handler onPlaylistInfoHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg){
+			super.handleMessage(msg);
+			
+			curPlaylistInfoJSON = msg.getData().getString("result");
+			curPlaylistInfo = VideoUtil.parsePlaylistInfoJSON(curPlaylistInfoJSON);
+			if(curPlaylistInfo==null || curPlaylistInfo.videos.size() == 0)
+			{
+				Log.e(LOG_TAG, "ERROR: video info error or no playable rendition");
+				return ;
+			}
+			// TODO: codes for playing playlist. 
+			
+			initListeners(); 
+			initPlayer();
+		}
+	};
+	
 	
 	private void initListeners()
 	{
@@ -139,11 +220,14 @@ public class ViewVideoActivity extends Activity
 		seekBar = (SeekBar) findViewById(R.id.seekBar);
 		seekBar.setOnSeekBarChangeListener(onSeekBarChange);
 		
-		playButton = (ImageButton) findViewById(R.id.play_button);
-		playButton.setOnClickListener(onPlayButtonClick);
+//		playButton = (ImageButton) findViewById(R.id.play_button);
+//		playButton.setOnClickListener(onPlayButtonClick);
+//		
+//		pauseButton = (ImageButton) findViewById(R.id.pause_button);
+//		pauseButton.setOnClickListener(onPauseButtonClick);
 		
-		pauseButton = (ImageButton) findViewById(R.id.pause_button);
-		pauseButton.setOnClickListener(onPauseButtonClick);
+		playPauseButton = (PlayPauseButton) findViewById(R.id.play_pause_button);
+		playPauseButton.setOnPlayButtonStateChangeListener(onPlayButtonStateChangeListener);
 		
 		fullScreenButton = (ImageButton) findViewById(R.id.fullscreen_button);
 		fullScreenButton.setOnClickListener(onFullScreenButtonClick);
@@ -264,9 +348,10 @@ public class ViewVideoActivity extends Activity
 		Log.w(LOG_TAG, "onSeekComplete : " + mp.getCurrentPosition());
 	}
 
-	public void onCompletion(MediaPlayer mp) {
-
-		setPlayingState(false);
+	public void onCompletion(MediaPlayer mp) 
+	{
+		playPauseButton.setPlayState(false);
+//		setPlayingState(false);
 	}
 
 
@@ -298,7 +383,8 @@ public class ViewVideoActivity extends Activity
 		player.start();
 		snapshot.setVisibility(View.INVISIBLE);// 
 		
-		setPlayingState(true);
+		playPauseButton.setPlayState(true);
+//		setPlayingState(true);
 		
 		startTimer();
 	}
@@ -398,31 +484,47 @@ public class ViewVideoActivity extends Activity
 	
 	//////////////// play control
 	
-	private OnClickListener onPlayButtonClick = new OnClickListener() 
+//	private OnClickListener onPlayButtonClick = new OnClickListener() 
+//	{
+//		@Override
+//		public void onClick(View v) 
+//		{
+//			player.start();
+//			setPlayingState(true);
+//		}
+//	};
+//	
+//	private OnClickListener onPauseButtonClick = new OnClickListener() 
+//	{
+//		@Override
+//		public void onClick(View v) 
+//		{
+//			player.pause();
+//			setPlayingState(false);
+//		}
+//	};
+//	private void setPlayingState(Boolean playing)
+//	{
+//		playButton.setVisibility(playing ? View.INVISIBLE : View.VISIBLE);
+//		pauseButton.setVisibility(playing ? View.VISIBLE : View.INVISIBLE);
+//	}
+	
+	private OnPlayButtonStateChangeListener onPlayButtonStateChangeListener = new OnPlayButtonStateChangeListener() 
 	{
 		@Override
-		public void onClick(View v) 
+		public void onClick(View v, String state) 
 		{
-			player.start();
-			setPlayingState(true);
+			if(state == "play")
+			{
+				player.start();
+			}
+			else if(state == "pause")
+			{
+				player.pause();
+			}
 		}
 	};
 	
-	private OnClickListener onPauseButtonClick = new OnClickListener() 
-	{
-		@Override
-		public void onClick(View v) 
-		{
-			player.pause();
-			setPlayingState(false);
-		}
-	};
-	
-	private void setPlayingState(Boolean playing)
-	{
-		playButton.setVisibility(playing ? View.INVISIBLE : View.VISIBLE);
-		pauseButton.setVisibility(playing ? View.VISIBLE : View.INVISIBLE);
-	}
 	
 	private OnClickListener onFullScreenButtonClick = new OnClickListener() 
 	{

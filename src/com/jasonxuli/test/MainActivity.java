@@ -1,16 +1,8 @@
 package com.jasonxuli.test;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONTokener;
-
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -18,23 +10,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.TabHost;
 
-import com.jasonxuli.test.comps.PlaylistListArrayAdapter;
-import com.jasonxuli.test.comps.PopupConfirm;
-import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.control.APILoader;
-import com.jasonxuli.test.control.Facade;
 import com.jasonxuli.test.fragments.PlaylistListFragment;
 import com.jasonxuli.test.fragments.VideoListFragment;
-import com.jasonxuli.test.utils.CommonUtil;
 import com.jasonxuli.test.utils.GlobalData;
-import com.jasonxuli.test.vo.Playlist;
 
 public class MainActivity extends FragmentActivity {
 
