@@ -50,6 +50,7 @@ import android.widget.TextView;
 import com.jasonxuli.test.comps.CustomRelativeLayout;
 import com.jasonxuli.test.comps.PlayPauseButton;
 import com.jasonxuli.test.comps.PlayPauseButton.OnPlayButtonStateChangeListener;
+import com.jasonxuli.test.comps.VolumeButton;
 import com.jasonxuli.test.constants.APIConstant;
 import com.jasonxuli.test.constants.MessageConstant;
 import com.jasonxuli.test.control.Facade;
@@ -98,6 +99,7 @@ public class ViewVideoActivity extends Activity
 	private PlayPauseButton playPauseButton;
 //	private ImageButton playButton;
 //	private ImageButton pauseButton;
+	private VolumeButton volumeButton;
 	private ImageButton fullScreenButton;
 	private ImageButton fullScreenExitButton;
 	private TextView videoTitle;
@@ -107,6 +109,8 @@ public class ViewVideoActivity extends Activity
 	private long duration;
 	private int videoWidth;
 	private int videoHeight;
+	
+	private int maxVolumeIndex;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +206,7 @@ public class ViewVideoActivity extends Activity
 	private void initListeners()
 	{
 		audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+		maxVolumeIndex = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		
 		playerViewContainer = (CustomRelativeLayout) findViewById(R.id.playerContainer);
 		playerViewContainer.setOnSizeChangedListener(onPlayerViewContainerSizeChcanged);
@@ -228,6 +233,8 @@ public class ViewVideoActivity extends Activity
 		
 		playPauseButton = (PlayPauseButton) findViewById(R.id.play_pause_button);
 		playPauseButton.setOnPlayButtonStateChangeListener(onPlayButtonStateChangeListener);
+		
+		volumeButton = (VolumeButton) findViewById(R.id.volume_button);
 		
 		fullScreenButton = (ImageButton) findViewById(R.id.fullscreen_button);
 		fullScreenButton.setOnClickListener(onFullScreenButtonClick);
@@ -675,13 +682,12 @@ public class ViewVideoActivity extends Activity
 		        		
 		        		int curVolumeIndex = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		        		volumeDelta += value * 0.005; // volume grade index.
-		        		volumeTarget = curVolumeIndex + volumeDelta;
-		        		int volumeIndexMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		        		Log.w(LOG_TAG, "Volume: " + volumeDelta + "," + curVolumeIndex + "," + volumeTarget + "," + volumeIndexMax);
-		        		if(volumeTarget < 0 || volumeTarget > volumeIndexMax)
-		        			return true ;
+		        		volumeTarget = Math.min(Math.max(curVolumeIndex + volumeDelta, 0), maxVolumeIndex);
+		        		Log.w(LOG_TAG, "Volume: " + volumeDelta + "," + curVolumeIndex + "," + volumeTarget + "," + maxVolumeIndex);
+//		        		if(volumeTarget < 0 || volumeTarget > maxVolumeIndex)
+//		        			return true ;
 		        		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)volumeTarget, AudioManager.FLAG_PLAY_SOUND);
-		        		slideVolume.setText((int)(volumeTarget/volumeIndexMax*100)+"%");
+		        		slideVolume.setText((int)(volumeTarget/maxVolumeIndex*100)+"%");
 		        		autoHide(slideVolumeHint, 1000);
 		        	}
 		        	
@@ -693,8 +699,10 @@ public class ViewVideoActivity extends Activity
 		        	if(direction == LEFT || direction == RIGHT)
 		        		player.seekTo((int)(player.getCurrentPosition() + timeDelta));
 //		        	else if(area == 1)
-//		        	else if(area == 2)
-//		        		player.setVolume(volumeTarget, volumeTarget);
+		        	else if(area == 2)
+		        	{
+		        		volumeButton.setVolume((int)(volumeTarget/maxVolumeIndex*100));
+		        	}
 		        	direction = 0;
 		        	timeDelta = 0;
 		        	volumeDelta = 0;

@@ -123,6 +123,7 @@
 				android:orientation="horizontal"
 				android:layout_width="match_parent"
 		    	android:layout_height="30dp"
+		    	android:layout_marginTop="5dp"
 		    	android:gravity="center_vertical"
 		    	>
 	    		
@@ -167,10 +168,18 @@
 	                android:layout_height="wrap_content"
 	                android:gravity="center_vertical"
 	                android:paddingLeft="10dp"
-	                android:layout_toRightOf="@+id/play_pause_container"
+	                android:layout_toRightOf="@+id/play_pause_button"
 	                android:textColor="@color/play_time"
 	                android:text="@string/play_time_default"
 	                />
+		        
+		        <com.jasonxuli.test.comps.VolumeButton
+		            android:id="@+id/volume_button"
+ 	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/time"
+		            >
+		        </com.jasonxuli.test.comps.VolumeButton>
 		        
 		        <RelativeLayout 
 	                android:layout_width="wrap_content"
