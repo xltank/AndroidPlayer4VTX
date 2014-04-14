@@ -94,6 +94,25 @@
 	        	android:textColor="#A8A8A8"
 	            />
 	    </LinearLayout>
+	    
+	    <RelativeLayout
+	        android:id="@+id/volume_slider_container"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content">
+
+	        <SeekBar
+	            android:id="@+id/volume_slider"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:max="100"
+	            android:progress="30"
+	            android:secondaryProgress="60" 
+	            android:rotation="270"
+	            />
+	        
+	    </RelativeLayout>
+	    
+	    
         
         <LinearLayout 
             android:id="@+id/controlBar"
