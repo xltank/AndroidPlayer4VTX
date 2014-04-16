@@ -68,4 +68,5 @@ public class VolumeButton extends RelativeLayout {
 		else if(volume >= 67)
 			volumeHigh.setVisibility(VISIBLE);
 	}
+	
 }

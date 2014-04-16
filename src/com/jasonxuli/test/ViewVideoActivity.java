@@ -69,6 +69,8 @@ public class ViewVideoActivity extends Activity
 	private final boolean AUTO_HIDE = true;
 	private final int AUTO_HIDE_DELAY_MILLIS = 3000;
 	
+	private final int FLOAT_PANEL_MIN_WIDTH = 40;
+	
 	private String curVideoInfoJSON ;
 	private VideoInfo curVideoInfo; 
 	
@@ -97,13 +99,13 @@ public class ViewVideoActivity extends Activity
 	private TextView timeLabel;
 	private SeekBar seekBar;
 	private PlayPauseButton playPauseButton;
-//	private ImageButton playButton;
-//	private ImageButton pauseButton;
 	private VolumeButton volumeButton;
 	private ImageButton fullScreenButton;
 	private ImageButton fullScreenExitButton;
 	private TextView videoTitle;
 	private TextView videoDesc;
+	
+	private LinearLayout floatPanel;
 	
 	private int bufferPercent;
 	private long duration;
@@ -225,16 +227,11 @@ public class ViewVideoActivity extends Activity
 		seekBar = (SeekBar) findViewById(R.id.seekBar);
 		seekBar.setOnSeekBarChangeListener(onSeekBarChange);
 		
-//		playButton = (ImageButton) findViewById(R.id.play_button);
-//		playButton.setOnClickListener(onPlayButtonClick);
-//		
-//		pauseButton = (ImageButton) findViewById(R.id.pause_button);
-//		pauseButton.setOnClickListener(onPauseButtonClick);
-		
 		playPauseButton = (PlayPauseButton) findViewById(R.id.play_pause_button);
 		playPauseButton.setOnPlayButtonStateChangeListener(onPlayButtonStateChangeListener);
 		
 		volumeButton = (VolumeButton) findViewById(R.id.volume_button);
+		volumeButton.setOnClickListener(onVolumeButtonclick);
 		
 		fullScreenButton = (ImageButton) findViewById(R.id.fullscreen_button);
 		fullScreenButton.setOnClickListener(onFullScreenButtonClick);
@@ -247,6 +244,8 @@ public class ViewVideoActivity extends Activity
 		
 		videoDesc = (TextView) findViewById(R.id.video_desc);
 		videoDesc.setText(videoInfo.description);
+		
+		floatPanel = (LinearLayout) findViewById(R.id.float_panel);
 	}
 	
 	private void initPlayer()
@@ -491,31 +490,6 @@ public class ViewVideoActivity extends Activity
 	
 	//////////////// play control
 	
-//	private OnClickListener onPlayButtonClick = new OnClickListener() 
-//	{
-//		@Override
-//		public void onClick(View v) 
-//		{
-//			player.start();
-//			setPlayingState(true);
-//		}
-//	};
-//	
-//	private OnClickListener onPauseButtonClick = new OnClickListener() 
-//	{
-//		@Override
-//		public void onClick(View v) 
-//		{
-//			player.pause();
-//			setPlayingState(false);
-//		}
-//	};
-//	private void setPlayingState(Boolean playing)
-//	{
-//		playButton.setVisibility(playing ? View.INVISIBLE : View.VISIBLE);
-//		pauseButton.setVisibility(playing ? View.VISIBLE : View.INVISIBLE);
-//	}
-	
 	private OnPlayButtonStateChangeListener onPlayButtonStateChangeListener = new OnPlayButtonStateChangeListener() 
 	{
 		@Override
@@ -529,6 +503,16 @@ public class ViewVideoActivity extends Activity
 			{
 				player.pause();
 			}
+		}
+	};
+	
+	
+	private OnClickListener onVolumeButtonclick = new OnClickListener() 
+	{
+		@Override
+		public void onClick(View v) 
+		{
+			
 		}
 	};
 	
@@ -565,22 +549,35 @@ public class ViewVideoActivity extends Activity
 		@Override
 		public void onClick(View v) 
 		{
-			player.pause();
-			
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			fullScreenButton.setVisibility(View.VISIBLE);
-			fullScreenExitButton.setVisibility(View.INVISIBLE);
-			findViewById(R.id.gap).setVisibility(View.VISIBLE);
-			findViewById(R.id.video_info).setVisibility(View.VISIBLE);
-
-			WindowManager.LayoutParams attrs = getWindow().getAttributes();
-			attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
-			getWindow().setAttributes(attrs);
-			
-			layoutVideo();
-			player.start();
+			exitFullScreen();
 		}
 	};
+	
+	private void exitFullScreen()
+	{
+		player.pause();
+		
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		fullScreenButton.setVisibility(View.VISIBLE);
+		fullScreenExitButton.setVisibility(View.INVISIBLE);
+		findViewById(R.id.gap).setVisibility(View.VISIBLE);
+		findViewById(R.id.video_info).setVisibility(View.VISIBLE);
+
+		WindowManager.LayoutParams attrs = getWindow().getAttributes();
+		attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
+		getWindow().setAttributes(attrs);
+		
+		layoutVideo();
+		
+		if(floatPanel.getVisibility() == View.VISIBLE)
+		{
+			// collapse and hide.
+			floatPanel.setLayoutParams(new LinearLayout.LayoutParams(FLOAT_PANEL_MIN_WIDTH, LinearLayout.LayoutParams.MATCH_PARENT));
+			floatPanel.setVisibility(View.INVISIBLE);
+		}
+		
+		player.start();
+	}
 	
 	
 	private final int LEFT = 1;
@@ -660,7 +657,7 @@ public class ViewVideoActivity extends Activity
 		        		brightnessTarget = curBrightness + brightnessDelta;
 		        		if(brightnessTarget < 0 || brightnessTarget > 255)
 		        			return true; // TODO : or close this touch action.
-		        		Log.w(LOG_TAG, brightnessDelta + ", " + curBrightness + ", " + brightnessTarget);
+//		        		Log.w(LOG_TAG, brightnessDelta + ", " + curBrightness + ", " + brightnessTarget);
 		        		LayoutParams lp = getWindow().getAttributes();
 		        		lp.screenBrightness = brightnessTarget/255;
 		                getWindow().setAttributes(lp);
@@ -683,7 +680,7 @@ public class ViewVideoActivity extends Activity
 		        		int curVolumeIndex = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		        		volumeDelta += value * 0.005; // volume grade index.
 		        		volumeTarget = Math.min(Math.max(curVolumeIndex + volumeDelta, 0), maxVolumeIndex);
-		        		Log.w(LOG_TAG, "Volume: " + volumeDelta + "," + curVolumeIndex + "," + volumeTarget + "," + maxVolumeIndex);
+//		        		Log.w(LOG_TAG, "Volume: " + volumeDelta + "," + curVolumeIndex + "," + volumeTarget + "," + maxVolumeIndex);
 //		        		if(volumeTarget < 0 || volumeTarget > maxVolumeIndex)
 //		        			return true ;
 		        		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)volumeTarget, AudioManager.FLAG_PLAY_SOUND);
@@ -721,12 +718,14 @@ public class ViewVideoActivity extends Activity
 		}
 	};
 	
+	
 	final OnClickListener onPlayerViewContainerClickListener = new OnClickListener() 
 	{
 		@Override
 		public void onClick(View v) 
 		{
 			autoHide(controlBar, AUTO_HIDE_DELAY_MILLIS);
+			autoHide(floatPanel, AUTO_HIDE_DELAY_MILLIS);
 		}
 	};
 	private void autoHide(View v, int duration)
