@@ -12,7 +12,7 @@
     <!-- NOT in use. -->
     
     
-    <com.jasonxuli.test.comps.CustomRelativeLayout
+    <com.vtx.player.comps.CustomRelativeLayout
         android:id="@+id/playerContainer"
         android:layout_width="match_parent"
     	android:layout_height="0dp"
@@ -147,13 +147,13 @@
 		    	android:gravity="center_vertical"
 		    	>
 	    		
-		        <com.jasonxuli.test.comps.PlayPauseButton
+		        <com.vtx.player.comps.PlayPauseButton
 	    		    android:id="@+id/play_pause_button"
 	    		    android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
 		            android:layout_alignParentLeft="true"
 	    		    >
-	    		</com.jasonxuli.test.comps.PlayPauseButton>
+	    		</com.vtx.player.comps.PlayPauseButton>
 		        
 		        <TextView android:id="@+id/time"
 	                android:layout_width="wrap_content"
@@ -165,13 +165,13 @@
 	                android:text="@string/play_time_default"
 	                />
 		        
-		        <com.jasonxuli.test.comps.VolumeButton
+		        <com.vtx.player.comps.VolumeButton
 		            android:id="@+id/volume_button"
  	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_toRightOf="@+id/time"
 		            >
-		        </com.jasonxuli.test.comps.VolumeButton>
+		        </com.vtx.player.comps.VolumeButton>
 		        
 		        <RelativeLayout 
 	                android:layout_width="wrap_content"
@@ -200,7 +200,7 @@
 		        </RelativeLayout>
 			</RelativeLayout>
     	</LinearLayout>
-	</com.jasonxuli.test.comps.CustomRelativeLayout>
+	</com.vtx.player.comps.CustomRelativeLayout>
     
 <!--     <LinearLayout android:id="@+id/gap" -->
 <!--         android:orientation="horizontal" -->
