@@ -120,10 +120,33 @@
 	        android:visibility="invisible"
 	        android:layout_alignParentRight="true"
 	        android:orientation="horizontal"
-	        android:background="#000000"
 	        >
 	        
 	    </LinearLayout>
+	    
+	    <LinearLayout 
+            android:id="@+id/menuBar"
+	        android:orientation="horizontal"
+			android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_alignParentTop="true"
+	    	android:layout_alignParentLeft="true"
+	    	android:gravity="right"
+	    	android:paddingLeft="8dp"
+	    	android:paddingRight="8dp"
+	    	android:background="@color/player_controlbar_bg"
+	    	android:alpha="0.7">
+
+	        <Button
+	            android:id="@+id/button1"
+	            style="?android:attr/buttonStyleSmall"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:padding="0dp"
+	            android:paddingTop="0dp"
+	            android:text="列表" />
+	        
+        </LinearLayout>
         
         <LinearLayout 
             android:id="@+id/controlBar"
@@ -156,34 +179,6 @@
 		    	android:layout_marginTop="5dp"
 		    	android:gravity="center_vertical"
 		    	>
-	    		
-<!-- 	            <RelativeLayout  -->
-<!-- 	                android:id="@+id/play_pause_container" -->
-<!-- 	                android:layout_width="wrap_content" -->
-<!-- 		            android:layout_height="wrap_content" -->
-<!-- 		            android:layout_alignParentLeft="true" -->
-<!-- 		            android:visibility="invisible" -->
-<!-- 		            > -->
-<!-- 			        <ImageButton  -->
-<!-- 			            android:id="@+id/play_button" -->
-<!-- 			            android:layout_width="@dimen/play_control_button_size" -->
-<!-- 			            android:layout_height="@dimen/play_control_button_size" -->
-<!-- 			            android:scaleType="fitXY" -->
-<!-- 			            android:padding="0dp" -->
-<!-- 			            android:contentDescription="@string/button_desc" -->
-<!-- 			            android:src="@drawable/play_button" -->
-<!-- 			            style="?android:attr/borderlessButtonStyle"/> -->
-<!-- 			        <ImageButton  -->
-<!-- 			            android:id="@+id/pause_button" -->
-<!-- 			            android:layout_width="@dimen/play_control_button_size" -->
-<!-- 			            android:layout_height="@dimen/play_control_button_size" -->
-<!-- 			            android:scaleType="fitXY" -->
-<!-- 			            android:padding="0dp" -->
-<!-- 			            android:src="@drawable/pause_button" -->
-<!-- 			            android:contentDescription="@string/button_desc" -->
-<!-- 			            android:visibility="invisible" -->
-<!-- 			            style="?android:attr/borderlessButtonStyle"/> -->
-<!-- 		        </RelativeLayout> -->
 		        
 		        <com.vtx.player.comps.PlayPauseButton
 	    		    android:id="@+id/play_pause_button"
