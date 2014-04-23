@@ -2,6 +2,7 @@ package com.vtx.player;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -91,6 +92,7 @@ public class ViewVideoActivity extends Activity
 	private View slideBrightnessHint;
 	private TextView slideBrightness;
 	
+	// TODO: a control-bar interface is needed for customized control-bar.
 	private TextView timeLabel;
 	private SeekBar seekBar;
 	private PlayPauseButton playPauseButton;
@@ -596,7 +598,7 @@ public class ViewVideoActivity extends Activity
 		
 		@Override
 		public boolean onTouch(View v, MotionEvent event) 
-		{
+		{ //TODO: a movement threshold in pixel to prevent click from touch. 
 			int action = event.getActionMasked();
 			float curX = event.getX();
 			float curY = event.getY();
@@ -726,22 +728,29 @@ public class ViewVideoActivity extends Activity
 			autoHide(floatPanel, AUTO_HIDE_DELAY_MILLIS);
 		}
 	};
+	private HashMap<View, Runnable> autoHideHash = new HashMap<View, Runnable>();
+	private Handler mHideHandler = new Handler();
 	private void autoHide(View v, int duration)
 	{
 		final View view = v;
-		Handler mHideHandler = new Handler();
 		Runnable mHideRunnable = new Runnable() {
 			@Override
 			public void run() {
 				view.setVisibility(View.INVISIBLE);
 			}
 		};
+		
 		view.setVisibility(View.VISIBLE);
-		if (AUTO_HIDE) 
+		
+		Runnable lastRunnable = autoHideHash.get(v);
+		if(lastRunnable != null)
 		{
-			mHideHandler.removeCallbacks(mHideRunnable);
-			mHideHandler.postDelayed(mHideRunnable, duration);
+			autoHideHash.remove(v);
+			mHideHandler.removeCallbacks(lastRunnable);
 		}
+
+		autoHideHash.put(v, mHideRunnable);
+		mHideHandler.postDelayed(mHideRunnable, duration);
 	}
 	
 	
