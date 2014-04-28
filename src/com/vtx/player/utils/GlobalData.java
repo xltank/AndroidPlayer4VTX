@@ -9,6 +9,8 @@ import com.vtx.player.vo.Video;
 
 public class GlobalData {
 
+	public static String DEBUG_TAG = "VTXPlayer";
+	
 	public static String apiDomain = "http://api.staging.video-tx.com/";
 	
 	public static String token = "";

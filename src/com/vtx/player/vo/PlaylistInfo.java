@@ -3,12 +3,6 @@ package com.vtx.player.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public class PlaylistInfo {
 	
 	

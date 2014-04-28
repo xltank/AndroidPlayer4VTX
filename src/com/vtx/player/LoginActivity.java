@@ -5,7 +5,9 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.vtx.player.R;
 import com.vtx.player.control.Facade;
@@ -22,6 +25,9 @@ import com.vtx.player.vo.Manager;
 import com.vtx.player.vo.Publisher;
 
 public class LoginActivity extends Activity {
+	
+	
+	private Context mContext;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +39,12 @@ public class LoginActivity extends Activity {
 		
 		setContentView(R.layout.activity_login);
 //		setupActionBar();
+		
+		mContext = this;
 	}
 	
-
+	
+	// TODO: encryption
     public void onLoginClick(View v)
 	{
     	String email = ((EditText) findViewById(R.id.userName)).getText().toString();
@@ -52,7 +61,7 @@ public class LoginActivity extends Activity {
     		super.handleMessage(msg);
     		String result = msg.getData().getString("result");
 //    		System.out.println(result);
-
+    		
     		JSONObject json = null;
 			try {
 				json = (JSONObject) new JSONTokener(result).nextValue();
@@ -60,7 +69,7 @@ public class LoginActivity extends Activity {
 				String status = json.getString("status");
 				
 				if(!status.equals("SUCCESS")){
-					// TODO: pop up message .
+					Toast.makeText(mContext, "Invalid email or password.", Toast.LENGTH_SHORT).show();
 					return ;
 				}else
 				{
@@ -68,6 +77,12 @@ public class LoginActivity extends Activity {
 					GlobalData.curPublisher = new Publisher(json.getJSONObject("publisher"));
 					GlobalData.curManager = new Manager(json.getJSONObject("manager"));
 					
+		    		SharedPreferences sp = getSharedPreferences("VTXPlayer", 0);
+		    		SharedPreferences.Editor editor = sp.edit();
+		    		editor.putString("email", ((EditText) findViewById(R.id.userName)).getText().toString());
+		    		editor.putString("token", GlobalData.token);
+		    		editor.apply();
+		    		
 					toMainPage();
 				}
 			} catch (JSONException e) {

@@ -1,6 +1,7 @@
 package com.vtx.player;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.TabHost;
 
-import com.vtx.player.R;
 import com.vtx.player.control.APILoader;
 import com.vtx.player.fragments.PlaylistListFragment;
 import com.vtx.player.fragments.VideoListFragment;
@@ -30,6 +30,7 @@ public class MainActivity extends FragmentActivity {
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//    	Log.w(GlobalData.DEBUG_TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
@@ -44,13 +45,30 @@ public class MainActivity extends FragmentActivity {
         viewPager.setOnPageChangeListener(onPageChangeListener);
         viewPager.setAdapter(new ListPagerAdapter(getSupportFragmentManager()));
         
-        if(GlobalData.token == null)
+        if(!checkLoginStatus())
         {
         	Intent loginIntent = new Intent(this, LoginActivity.class);
         	startActivity(loginIntent);
+        	return ;
         }
     }
     
+    private Boolean checkLoginStatus()
+	{
+    	if(GlobalData.token != "")
+    		return true;
+    	
+		SharedPreferences sp = getSharedPreferences("VTXPlayer", 0);
+		String email = sp.getString("email", "");
+		String token = sp.getString("token", "");
+		if(email != "" && token != "")
+		{
+			GlobalData.token = token;
+			return true;
+		}
+		return false;
+	}
+	
     
     private class ListPagerAdapter extends FragmentPagerAdapter
     {
@@ -110,6 +128,7 @@ public class MainActivity extends FragmentActivity {
     protected void onStart()
     {
     	super.onStart();
+//    	Log.w(GlobalData.DEBUG_TAG, "onStart");
     	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
     

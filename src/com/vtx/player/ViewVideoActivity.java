@@ -52,6 +52,7 @@ import com.vtx.player.constants.MessageConstant;
 import com.vtx.player.control.Facade;
 import com.vtx.player.control.ImageManager;
 import com.vtx.player.utils.CommonUtil;
+import com.vtx.player.utils.GlobalData;
 import com.vtx.player.utils.VideoUtil;
 import com.vtx.player.vo.PlaylistInfo;
 import com.vtx.player.vo.ThumbnailsVTX;
@@ -61,8 +62,7 @@ public class ViewVideoActivity extends Activity
 	implements Callback, OnPreparedListener, OnBufferingUpdateListener, OnVideoSizeChangedListener,
 	OnCompletionListener, OnSeekCompleteListener, OnErrorListener, OnInfoListener{
 
-	private final String LOG_TAG = "ViewVideoActivity";
-	private final boolean AUTO_HIDE = true;
+//	private final boolean AUTO_HIDE = true;
 	private final int AUTO_HIDE_DELAY_MILLIS = 3000;
 	
 	private final int FLOAT_PANEL_MIN_WIDTH = 40;
@@ -154,7 +154,7 @@ public class ViewVideoActivity extends Activity
 			curVideoInfo = VideoUtil.parseVideoInfoJSON(curVideoInfoJSON);
 			if(curVideoInfo==null || curVideoInfo.renditions.size() == 0)
 			{
-				Log.e(LOG_TAG, "ERROR: video info error or no playable rendition");
+				Log.e(GlobalData.DEBUG_TAG, "ERROR: video info error or no playable rendition");
 				return ;
 			}
 
@@ -191,7 +191,7 @@ public class ViewVideoActivity extends Activity
 			curPlaylistInfo = VideoUtil.parsePlaylistInfoJSON(curPlaylistInfoJSON);
 			if(curPlaylistInfo==null || curPlaylistInfo.videos.size() == 0)
 			{
-				Log.e(LOG_TAG, "ERROR: video info error or no playable rendition");
+				Log.e(GlobalData.DEBUG_TAG, "ERROR: video info error or no playable rendition");
 				return ;
 			}
 			// TODO: codes for playing playlist. 
@@ -319,20 +319,20 @@ public class ViewVideoActivity extends Activity
 		case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING :
 			break;
 		case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START :
-			Log.w(LOG_TAG, "onInfo : MEDIA_INFO_VIDEO_RENDERING_START");
+			Log.w(GlobalData.DEBUG_TAG, "onInfo : MEDIA_INFO_VIDEO_RENDERING_START");
 			break;
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START :
-			Log.w(LOG_TAG, "onInfo : MEDIA_INFO_BUFFERING_START");
+			Log.w(GlobalData.DEBUG_TAG, "onInfo : MEDIA_INFO_BUFFERING_START");
 			break;
 		case MediaPlayer.MEDIA_INFO_BUFFERING_END :
-			Log.w(LOG_TAG, "onInfo : MEDIA_INFO_BUFFERING_END");
+			Log.w(GlobalData.DEBUG_TAG, "onInfo : MEDIA_INFO_BUFFERING_END");
 			break;
 		case MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING :
 			break;
 		case MediaPlayer.MEDIA_INFO_NOT_SEEKABLE :
 			break;
 		case MediaPlayer.MEDIA_INFO_METADATA_UPDATE :
-			Log.w(LOG_TAG, "onInfo : MEDIA_INFO_METADATA_UPDATE");
+			Log.w(GlobalData.DEBUG_TAG, "onInfo : MEDIA_INFO_METADATA_UPDATE");
 			break;
 		case MediaPlayer.MEDIA_INFO_UNSUPPORTED_SUBTITLE :
 			break;
@@ -343,12 +343,12 @@ public class ViewVideoActivity extends Activity
 	}
 
 	public boolean onError(MediaPlayer mp, int what, int extra) {
-		Log.w(LOG_TAG, "onError : " + what + " , "  + extra);
+		Log.w(GlobalData.DEBUG_TAG, "onError : " + what + " , "  + extra);
 		return false;
 	}
 
 	public void onSeekComplete(MediaPlayer mp) {
-		Log.w(LOG_TAG, "onSeekComplete : " + mp.getCurrentPosition());
+		Log.w(GlobalData.DEBUG_TAG, "onSeekComplete : " + mp.getCurrentPosition());
 	}
 
 	public void onCompletion(MediaPlayer mp) 
@@ -362,19 +362,19 @@ public class ViewVideoActivity extends Activity
 	
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		Log.w(LOG_TAG, "surface Changed");
+		Log.w(GlobalData.DEBUG_TAG, "surface Changed");
 	}
 	// when activity is paused, surface is destroyed.
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		Log.w(LOG_TAG, "surface Destroyed");
+		Log.w(GlobalData.DEBUG_TAG, "surface Destroyed");
 		playerView.setOnTouchListener(null);
 		playerView.setOnClickListener(null);
 	}
 	// when activity is started/restarted, surface is created.
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		Log.w(LOG_TAG, "surface Created");
+		Log.w(GlobalData.DEBUG_TAG, "surface Created");
 		playerView.setOnClickListener(onPlayerViewClickListener);
 		playerView.setOnTouchListener(onPlayerViewTouchListener);
 		startPlaying();
@@ -476,7 +476,7 @@ public class ViewVideoActivity extends Activity
 			return ;
 		
 		Point newSize = CommonUtil.getSuitableSize(videoWidth, videoHeight, containerW, containerH);
-//		Log.w(LOG_TAG, newSize.x + "," + newSize.y);
+//		Log.w(GlobalData.DEBUG_TAG, newSize.x + "," + newSize.y);
 		// !!! when setLayoutParams is called rapidly, video will not show.
 		playerView.setLayoutParams(new RelativeLayout.LayoutParams(newSize.x, newSize.y));
 		
@@ -604,19 +604,19 @@ public class ViewVideoActivity extends Activity
 			float curY = event.getY();
 			switch(action) {
 		        case (MotionEvent.ACTION_DOWN) :
-					Log.w(LOG_TAG, "On Touch ACTION_DOWN");
+					Log.w(GlobalData.DEBUG_TAG, "On Touch ACTION_DOWN");
 	        		area = event.getX()*2 < playerViewContainer.getWidth() ? 1 : 2;
 		        	lastX = curX;
 		        	lastY = curY;
 		            return false;
 		        case (MotionEvent.ACTION_MOVE) :
-		        	Log.w(LOG_TAG, "On Touch ACTION_MOVE");
+		        	Log.w(GlobalData.DEBUG_TAG, "On Touch ACTION_MOVE");
 		        	// getHistoricalX()/getHistoricalY() is not perfect, for sometime getHistorySize() == 0.
 		        	float xValue = curX - lastX;
 		        	float yValue = curY - lastY;
 		        	if(xValue == 0 && yValue == 0) // first move event.
 		        		return true;
-//		        	Log.w(LOG_TAG, (curX - lastX) + ", " + xValue);
+//		        	Log.w(GlobalData.DEBUG_TAG, (curX - lastX) + ", " + xValue);
 		        	
 		        	if(direction == 0)
 		        	{
@@ -630,7 +630,7 @@ public class ViewVideoActivity extends Activity
 						value = xValue;
 		        	else // if(direction == TOP || direction == BOTTOM)
 						value = -yValue;
-//		        	Log.w(LOG_TAG, "direction: " + direction + "," + value + "," + (curX - lastX));
+//		        	Log.w(GlobalData.DEBUG_TAG, "direction: " + direction + "," + value + "," + (curX - lastX));
 		        	
 		        	if(direction == LEFT || direction == RIGHT) // progress
 		        	{
@@ -648,7 +648,7 @@ public class ViewVideoActivity extends Activity
 						try {
 							curBrightness = System.getInt(getContentResolver(), System.SCREEN_BRIGHTNESS);
 							LayoutParams lp = getWindow().getAttributes();
-							Log.w(LOG_TAG, "curBrightness " + curBrightness + ", " + lp.screenBrightness);
+							Log.w(GlobalData.DEBUG_TAG, "curBrightness " + curBrightness + ", " + lp.screenBrightness);
 						}
 						catch (SettingNotFoundException e) {
 							e.printStackTrace();
@@ -656,7 +656,7 @@ public class ViewVideoActivity extends Activity
 		        		brightnessTarget = curBrightness + brightnessDelta;
 		        		if(brightnessTarget < 0 || brightnessTarget > 255)
 		        			return true; // TODO : or close this touch action.
-//		        		Log.w(LOG_TAG, brightnessDelta + ", " + curBrightness + ", " + brightnessTarget);
+//		        		Log.w(GlobalData.DEBUG_TAG, brightnessDelta + ", " + curBrightness + ", " + brightnessTarget);
 		        		LayoutParams lp = getWindow().getAttributes();
 		        		lp.screenBrightness = brightnessTarget/255;
 		                getWindow().setAttributes(lp);
@@ -670,7 +670,7 @@ public class ViewVideoActivity extends Activity
 //		        		int curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 //		        		volumeDelta += value * 0.0004;
 //		        		volumeTarget = 0 + volumeDelta;
-//		        		Log.w(LOG_TAG, "Volume: " + volumeDelta + "," + curVolume + "," + volumeTarget);
+//		        		Log.w(GlobalData.DEBUG_TAG, "Volume: " + volumeDelta + "," + curVolume + "," + volumeTarget);
 //		        		if(volumeTarget < 0 || volumeTarget > 1)
 //		        			return true ;// TODO : or close this touch action.
 //		        		slideVolume.setText((int)(volumeTarget*100)+"%");
@@ -679,7 +679,7 @@ public class ViewVideoActivity extends Activity
 		        		int curVolumeIndex = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		        		volumeDelta += value * 0.005; // volume grade index.
 		        		volumeTarget = Math.min(Math.max(curVolumeIndex + volumeDelta, 0), maxVolumeIndex);
-//		        		Log.w(LOG_TAG, "Volume: " + volumeDelta + "," + curVolumeIndex + "," + volumeTarget + "," + maxVolumeIndex);
+//		        		Log.w(GlobalData.DEBUG_TAG, "Volume: " + volumeDelta + "," + curVolumeIndex + "," + volumeTarget + "," + maxVolumeIndex);
 //		        		if(volumeTarget < 0 || volumeTarget > maxVolumeIndex)
 //		        			return true ;
 		        		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)volumeTarget, AudioManager.FLAG_PLAY_SOUND);
@@ -691,7 +691,7 @@ public class ViewVideoActivity extends Activity
 		        	lastY = curY;
 		            return true;
 		        case (MotionEvent.ACTION_UP) :
-		        	Log.w(LOG_TAG, "On Touch ACTION_UP");
+		        	Log.w(GlobalData.DEBUG_TAG, "On Touch ACTION_UP");
 		        	if(direction == LEFT || direction == RIGHT)
 		        		player.seekTo((int)(player.getCurrentPosition() + timeDelta));
 //		        	else if(area == 1)
@@ -705,7 +705,7 @@ public class ViewVideoActivity extends Activity
 		        	brightnessDelta = 0;
 		            return false;
 		        case (MotionEvent.ACTION_OUTSIDE) :
-		        	Log.w(LOG_TAG, "On Touch ACTION_OUTSIDE");
+		        	Log.w(GlobalData.DEBUG_TAG, "On Touch ACTION_OUTSIDE");
 		        	direction = 0;
 		        	timeDelta = 0;
 		        	volumeDelta = 0;
@@ -723,7 +723,7 @@ public class ViewVideoActivity extends Activity
 		@Override
 		public void onClick(View v) 
 		{
-			Log.w(LOG_TAG, "On PlayerViewContainer Click");
+			Log.w(GlobalData.DEBUG_TAG, "On PlayerViewContainer Click");
 			autoHide(controlBar, AUTO_HIDE_DELAY_MILLIS);
 			autoHide(floatPanel, AUTO_HIDE_DELAY_MILLIS);
 		}
@@ -795,7 +795,7 @@ public class ViewVideoActivity extends Activity
 	protected void onStart()
 	{
 		super.onStart();
-		Log.w(LOG_TAG, "ViewVideoActivity  onStart");
+		Log.w(GlobalData.DEBUG_TAG, "ViewVideoActivity  onStart");
 	}
 	
 	/**
@@ -822,7 +822,7 @@ public class ViewVideoActivity extends Activity
 	protected void onResume()
 	{
 		super.onResume();
-		Log.w(LOG_TAG, "ViewVideoActivity  onResume");
+		Log.w(GlobalData.DEBUG_TAG, "ViewVideoActivity  onResume");
 		
 		startTimer();
 	}
@@ -831,7 +831,7 @@ public class ViewVideoActivity extends Activity
 	protected void onStop()
 	{
 		super.onStop();
-		Log.w(LOG_TAG, "ViewVideoActivity  onStop");
+		Log.w(GlobalData.DEBUG_TAG, "ViewVideoActivity  onStop");
 		if(player != null && player.isPlaying())
 		{
 			if(tikerTimer != null)
@@ -849,14 +849,14 @@ public class ViewVideoActivity extends Activity
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		Log.w(LOG_TAG, "ViewVideoActivity  onDestroy");
+		Log.w(GlobalData.DEBUG_TAG, "ViewVideoActivity  onDestroy");
 	}
 	
 	@Override
 	protected void onRestart()
 	{
 		super.onRestart();
-		Log.w(LOG_TAG, "ViewVideoActivity  onRestart");
+		Log.w(GlobalData.DEBUG_TAG, "ViewVideoActivity  onRestart");
 	}
 	
 
