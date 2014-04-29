@@ -11,6 +11,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -103,6 +104,23 @@ public class CommonUtil {
 			resultW = w * resultH/h ;
 		}
 		return new Point(resultW, resultH);
+	}
+	
+	
+	public static Boolean checkLoginStatus(Context context)
+	{
+    	if(GlobalData.token != "")
+    		return true;
+    	
+		SharedPreferences sp = context.getSharedPreferences("VTXPlayer", 0);
+		String email = sp.getString("email", "");
+		String token = sp.getString("token", "");
+		if(email != "" && token != "")
+		{
+			GlobalData.token = token;
+			return true;
+		}
+		return false;
 	}
 	
 }

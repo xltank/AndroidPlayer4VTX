@@ -102,6 +102,7 @@ public class ViewVideoActivity extends Activity
 	private TextView videoTitle;
 	private TextView videoDesc;
 	
+	private RelativeLayout menubar;
 	private LinearLayout floatPanel;
 	
 	private int bufferPercent;
@@ -241,6 +242,9 @@ public class ViewVideoActivity extends Activity
 		
 		videoDesc = (TextView) findViewById(R.id.video_desc);
 		videoDesc.setText(videoInfo.description);
+		
+		menubar = (RelativeLayout) findViewById(R.id.menuBar);
+//		menubar.setOnClickListener(l)
 		
 		floatPanel = (LinearLayout) findViewById(R.id.float_panel);
 	}
@@ -387,8 +391,10 @@ public class ViewVideoActivity extends Activity
 		snapshot.setVisibility(View.INVISIBLE);// 
 		
 		playPauseButton.setPlayState(true);
-//		setPlayingState(true);
-		
+
+		autoHide(controlBar, AUTO_HIDE_DELAY_MILLIS);
+		autoHide(menubar, AUTO_HIDE_DELAY_MILLIS);
+		autoHide(floatPanel, AUTO_HIDE_DELAY_MILLIS);
 		startTimer();
 	}
 	
@@ -583,7 +589,6 @@ public class ViewVideoActivity extends Activity
 	private final int BOTTOM = 4;
 	final OnTouchListener onPlayerViewTouchListener = new OnTouchListener() 
 	{	
-//		int type=0; // progress=1, volume=2, brightness=3;
 		int direction=0; // left=1, right=2, top=3, bottom=4;
 		int area=0; // left part=1, right part=2;
 		float value=0;
@@ -666,22 +671,10 @@ public class ViewVideoActivity extends Activity
 		        	}
 		        	else if(area == 2)  // volume
 		        	{
-		        		// TODO: get explicit volume value. Now this method returns volume grade index.
-//		        		int curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-//		        		volumeDelta += value * 0.0004;
-//		        		volumeTarget = 0 + volumeDelta;
-//		        		Log.w(GlobalData.DEBUG_TAG, "Volume: " + volumeDelta + "," + curVolume + "," + volumeTarget);
-//		        		if(volumeTarget < 0 || volumeTarget > 1)
-//		        			return true ;// TODO : or close this touch action.
-//		        		slideVolume.setText((int)(volumeTarget*100)+"%");
-//		        		autoHide(slideVolumeHint, 1000);
-		        		
+		        		// Android does not provide explicit volume control.
 		        		int curVolumeIndex = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		        		volumeDelta += value * 0.005; // volume grade index.
 		        		volumeTarget = Math.min(Math.max(curVolumeIndex + volumeDelta, 0), maxVolumeIndex);
-//		        		Log.w(GlobalData.DEBUG_TAG, "Volume: " + volumeDelta + "," + curVolumeIndex + "," + volumeTarget + "," + maxVolumeIndex);
-//		        		if(volumeTarget < 0 || volumeTarget > maxVolumeIndex)
-//		        			return true ;
 		        		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)volumeTarget, AudioManager.FLAG_PLAY_SOUND);
 		        		slideVolume.setText((int)(volumeTarget/maxVolumeIndex*100)+"%");
 		        		autoHide(slideVolumeHint, 1000);
@@ -726,6 +719,7 @@ public class ViewVideoActivity extends Activity
 			Log.w(GlobalData.DEBUG_TAG, "On PlayerViewContainer Click");
 			autoHide(controlBar, AUTO_HIDE_DELAY_MILLIS);
 			autoHide(floatPanel, AUTO_HIDE_DELAY_MILLIS);
+			autoHide(menubar, AUTO_HIDE_DELAY_MILLIS);
 		}
 	};
 	private HashMap<View, Runnable> autoHideHash = new HashMap<View, Runnable>();

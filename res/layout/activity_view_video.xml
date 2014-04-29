@@ -137,22 +137,26 @@
 	    	android:background="@color/player_controlbar_bg"
 	    	android:alpha="0.7">
 
-	        <ManubarButton 
+	        <Button
 	            android:id="@+id/playlist_button"
-            	android:layout_width="40dp"
-	            android:layout_height="match_parent"
+            	android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
 	            android:text="@string/playlist"
+	            android:textSize="12sp"
+	            android:background="#666666"
 	            />
 <!-- 			<View -->
 <!-- 			    android:layout_width="1dp" -->
 <!-- 			    android:layout_height="match_parent" -->
 <!-- 			    android:background="#b8b8b8"> -->
 <!-- 			</View> -->
-	        <ManubarButton
+	        <Button
 	            android:id="@+id/menu_button"
-	            android:layout_width="40dp"
+	            android:layout_width="wrap_content"
 	            android:layout_height="match_parent"
 	            android:text="@string/menu"
+	            android:textSize="12sp"
+	            android:background="#666666"
 	            />
 	        
         </LinearLayout>

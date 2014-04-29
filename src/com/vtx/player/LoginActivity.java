@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.vtx.player.R;
 import com.vtx.player.control.Facade;
 import com.vtx.player.utils.GlobalData;
 import com.vtx.player.vo.Manager;
@@ -41,6 +40,15 @@ public class LoginActivity extends Activity {
 //		setupActionBar();
 		
 		mContext = this;
+		
+//		if(CommonUtil.checkLoginStatus(this))
+//        {
+//        	Intent loginIntent = new Intent(this, LoginActivity.class);
+//        	startActivity(loginIntent);
+//        	return ;
+//        }
+		
+		//TODO: auto save email and password; auto login;
 	}
 	
 	

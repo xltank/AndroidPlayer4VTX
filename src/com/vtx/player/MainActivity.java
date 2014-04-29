@@ -1,7 +1,6 @@
 package com.vtx.player;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,7 @@ import android.widget.TabHost;
 import com.vtx.player.control.APILoader;
 import com.vtx.player.fragments.PlaylistListFragment;
 import com.vtx.player.fragments.VideoListFragment;
-import com.vtx.player.utils.GlobalData;
+import com.vtx.player.utils.CommonUtil;
 
 public class MainActivity extends FragmentActivity {
 
@@ -45,7 +44,7 @@ public class MainActivity extends FragmentActivity {
         viewPager.setOnPageChangeListener(onPageChangeListener);
         viewPager.setAdapter(new ListPagerAdapter(getSupportFragmentManager()));
         
-        if(!checkLoginStatus())
+        if(!CommonUtil.checkLoginStatus(this))
         {
         	Intent loginIntent = new Intent(this, LoginActivity.class);
         	startActivity(loginIntent);
@@ -53,22 +52,6 @@ public class MainActivity extends FragmentActivity {
         }
     }
     
-    private Boolean checkLoginStatus()
-	{
-    	if(GlobalData.token != "")
-    		return true;
-    	
-		SharedPreferences sp = getSharedPreferences("VTXPlayer", 0);
-		String email = sp.getString("email", "");
-		String token = sp.getString("token", "");
-		if(email != "" && token != "")
-		{
-			GlobalData.token = token;
-			return true;
-		}
-		return false;
-	}
-	
     
     private class ListPagerAdapter extends FragmentPagerAdapter
     {
