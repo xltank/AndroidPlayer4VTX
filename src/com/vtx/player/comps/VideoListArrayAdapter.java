@@ -27,7 +27,7 @@ public class VideoListArrayAdapter extends ArrayAdapter<Video> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) 
 	{
-		System.out.println(position);
+//		System.out.println(position);
 		View view = convertView;
 		if(convertView == null)
 		{
@@ -43,7 +43,7 @@ public class VideoListArrayAdapter extends ArrayAdapter<Video> {
 		
 //		imageView.setImageURI(Uri.parse(video.getSnapshotUrl()));
 		
-		System.out.println("url : " + CommonUtil.getHTTPFileName(video.getThumbnailUrl()));
+//		System.out.println("url : " + CommonUtil.getHTTPFileName(video.getThumbnailUrl()));
 		ImageManager.ins().loadImage(video.getThumbnailUrl(), imageView, 2);
 		
 		titleText.setText(video.getTitle());
