@@ -88,6 +88,8 @@ public class CommonUtil {
 	
 	public static String getHTTPFileName(String url)
 	{
+		if(url == null || url == "")
+			return "";
 		return url.substring(url.lastIndexOf("/"));
 	}
 	

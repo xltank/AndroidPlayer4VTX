@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
 
@@ -46,6 +47,12 @@ public class ImageManager {
 	
 	public void loadImage(String url, ImageView imageView, int inSampleSize)
 	{
+		if(url == "" || url == null)
+		{
+			Log.e(GlobalData.DEBUG_TAG, "ImageManager.loadImage() : empty image url");
+			return ;
+		}
+		
 		Bitmap bm = cache.get(url);
 		if(bm != null)
 		{
